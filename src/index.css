@@ -101,3 +101,69 @@ All colors MUST be HSL.
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+/* Aprix specific styles */
+@layer components {
+  .aprix-gradient-bg {
+    background: var(--gradient-card);
+  }
+
+  .aprix-gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .aprix-shadow {
+    box-shadow: var(--shadow-glow), var(--shadow-card);
+  }
+
+  .aprix-border {
+    border: 1px solid hsl(var(--border));
+  }
+
+  .aprix-border-light {
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  /* Custom scrollbar for Aprix */
+  .aprix-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.4) transparent;
+  }
+
+  .aprix-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .aprix-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .aprix-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 3px;
+  }
+
+  .aprix-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
+  }
+
+  /* Animação de entrada dos bubbles do chat */
+  @keyframes bubble-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .animate-bubble-in {
+    opacity: 0;
+    animation: bubble-in 0.3s ease-out forwards;
+  }
+}

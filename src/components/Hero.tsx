@@ -31,7 +31,7 @@ const Hero = () => {
 
   return (
     <section
-      id="home"
+      id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero"
     >
       {/* 3D Background */}
