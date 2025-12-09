@@ -4,7 +4,7 @@ import { SYSTEM_PROMPT } from "../prompts/systemPrompt";
 // URL da API - projeto no Vercel
 const VERCEL_API_URL =
   import.meta.env.VITE_VERCEL_API_URL ||
-  "https://lucasrubo-git-develop-lucasrubos-projects.vercel.app/api/chat";
+  "https://lucasrubo.vercel.app/api/chat";
 
 // URL relativa - usada apenas em desenvolvimento local
 const LOCAL_API_URL = "http://localhost:3000/api/chat";

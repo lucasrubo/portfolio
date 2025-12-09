@@ -29,7 +29,7 @@ const openApiSchema = {
   },
   servers: [
     {
-      url: "https://lucasrubo-git-develop-lucasrubos-projects.vercel.app",
+      url: "https://lucasrubo.vercel.app",
       description: "Produção",
     },
     {
