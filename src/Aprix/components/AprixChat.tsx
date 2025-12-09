@@ -73,10 +73,10 @@ const AprixChat: React.FC<AprixChatProps> = ({
   };
 
   return (
-    <div className="flex flex-col min-h-64 max-h-80">
+    <div className="flex flex-col max-sm:h-full">
       {/* Área de mensagens - com fade no topo */}
       <div
-        className="flex-1 overflow-y-auto py-2 space-y-3 aprix-scrollbar"
+        className="flex-1 overflow-y-auto py-4 space-y-4 aprix-scrollbar max-sm:py-6 max-sm:space-y-6 min-h-0 md:max-h-[500px]"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 15%, black 100%)",
@@ -100,7 +100,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
                 } ${isNew ? "animate-bubble-in" : ""}`}
               >
                 <div
-                  className={`max-w-[85%] px-4 py-2.5 rounded-2xl ${
+                  className={`max-w-[85%] max-sm:max-w-[95%] px-4 py-2.5 rounded-2xl ${
                     message.role === "user"
                       ? "bg-gradient-to-r from-primary to-secondary text-white rounded-br-md"
                       : "bg-white/10 text-white/90 rounded-bl-md"
@@ -121,7 +121,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
         {/* Loading indicator */}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="max-w-[85%] px-4 py-2.5 rounded-2xl bg-[#2f2f2fc9] text-white/90 rounded-bl-md">
+            <div className="max-w-[85%] max-sm:max-w-[95%] px-4 py-2.5 rounded-2xl bg-[#2f2f2fc9] text-white/90 rounded-bl-md">
               <div className="flex gap-1 items-center h-5">
                 <span className="w-2 h-2 bg-primary rounded-full animate-typing [animation-delay:0s]" />
                 <span className="w-2 h-2 bg-primary rounded-full animate-typing [animation-delay:0.2s]" />
@@ -135,7 +135,10 @@ const AprixChat: React.FC<AprixChatProps> = ({
       </div>
 
       {/* Input area */}
-      <form onSubmit={handleSubmit} className="flex gap-2 pt-3">
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center gap-2 pt-3 max-sm:h-16"
+      >
         {/* TTS Toggle Button */}
         <button
           type="button"

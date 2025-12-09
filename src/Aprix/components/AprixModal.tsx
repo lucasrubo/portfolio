@@ -94,7 +94,7 @@ const AprixModal: React.FC = () => {
   return (
     <div
       ref={modalRef}
-      className="fixed inset-0 flex justify-center items-center z-[9999] p-5 max-sm:p-2.5 "
+      className="fixed inset-0 flex justify-center items-center z-[9999] p-5 max-sm:p-0 "
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
       role="dialog"
@@ -104,7 +104,7 @@ const AprixModal: React.FC = () => {
     >
       <div
         ref={contentRef}
-        className="rounded-3xl bg-black/40 backdrop-blur-sm  mt-20 w-full max-w-[680px] max-h-[90vh] flex flex-col max-sm:max-h-[95vh] max-sm:rounded-2xl relative"
+        className="rounded-3xl bg-[#1c1c1cd9] aprix-border aprix-shadow backdrop-blur-sm  mt-20 w-full max-w-[680px] max-h-[90vh] flex flex-col max-sm:max-h-none max-sm:h-full max-sm:w-full max-sm:max-w-none max-sm:rounded-none max-sm:mt-0 max-sm:p-0 relative"
       >
         {/* Header */}
         <div className="flex justify-between items-center px-5 py-4 aprix-border-light border-t-0 border-l-0 border-r-0">
@@ -132,7 +132,7 @@ const AprixModal: React.FC = () => {
         {/* Container do Aprix - a esfera 3D será animada para cá */}
         <div
           id="aprix-modal-sphere-container"
-          className="flex justify-center items-center p-5 h-[325px] relative -mt-8 z-20 pointer-events-none"
+          className="flex justify-center items-center p-5 h-[325px] max-sm:h-[200px] relative -mt-8 z-20 pointer-events-none"
         >
           {/* Espaço reservado para a esfera 3D */}
         </div>

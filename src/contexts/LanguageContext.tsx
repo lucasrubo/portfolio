@@ -134,7 +134,7 @@ const translations = {
 
     // Profile About Paragraphs
     "profile.about.paragraph1":
-      "Tenho 24 anos e sou formado em Ciência da Computação pela Universidade Paulista.",
+      "Tenho 25 anos e sou formado em Ciência da Computação pela Universidade Paulista.",
     "profile.about.paragraph2":
       "Atualmente, trabalho como desenvolvedor na Areco, onde me especializo em desenvolvimento front-end para o sistema ERP Web usando Blazor. Além disso, contribuo para a construção de sistemas complementares com Blazor, Next.js e Delphi, garantindo integração perfeita e desempenho. Minha paixão está no desenvolvimento front-end, onde gosto de criar interfaces de usuário intuitivas e responsivas que melhoram a usabilidade e eficiência. Além do Blazor, também tenho experiência com React e TypeScript, que utilizo ativamente em projetos pessoais e profissionais para me manter na vanguarda do desenvolvimento web moderno.",
     "profile.about.paragraph3":
