@@ -1,13 +1,21 @@
-import { Hono } from "hono";
-import { cors } from "hono/cors";
+import app from "./src/index";
 
-// System prompt
-const SYSTEM_PROMPT = `Você é o Aprix, um assistente virtual inteligente e amigável do Lucas Gabriel Rubo.
+export default async function handler(request: Request) {
+  // Create a new request with the path adjusted for the app router
+  const url = new URL(request.url);
+  const newUrl = url.pathname.replace(/^\/api/, '');
 
-## Sobre o Lucas:
-- **Nome completo**: Lucas Gabriel Rubo
-- **Idade**: 24 anos (nascido em 12 de julho de 2000)
-- **Localização**: Valinhos, São Paulo, Brasil
+  const newRequest = new Request(
+    url.origin + newUrl + url.search,
+    {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    }
+  );
+
+  return app.fetch(newRequest);
+}
 - **Formação**: Bacharel em Ciência da Computação pela Universidade Paulista (UNIP) - 2019 a 2023
 - **Formação Técnica**: Curso Técnico em Informática pelo SENAI São Paulo - 2017 a 2019
 - **Cargo Atual**: Analista de Desenvolvimento Júnior na Areco Sistemas Empresariais
