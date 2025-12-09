@@ -4,14 +4,14 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
-    "api/**/*.js": {
+    "api/vercel/index.ts": {
       "runtime": "nodejs24.x"
     }
   },
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "/api/:path*"
+      "destination": "/api/vercel/index.ts"
     }
   ]
 }
