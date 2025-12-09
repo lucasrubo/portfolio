@@ -1,9 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/vercel/index.ts"
+  "functions": {
+    "vercel/index.ts": {
+      "runtime": "nodejs24.x"
     }
-  ]
+  }
 }
