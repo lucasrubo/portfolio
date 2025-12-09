@@ -1,9 +1,13 @@
 import type { ChatMessage } from "../types";
 import { SYSTEM_PROMPT } from "../prompts/systemPrompt";
 
-// URL da API - em produção usa a API route do Vercel
-// Em desenvolvimento, chama diretamente o Gemini se a chave estiver configurada
-const API_URL = "/api/chat";
+// URL da API - projeto separado no Vercel
+const VERCEL_API_URL =
+  import.meta.env.VITE_VERCEL_API_URL ||
+  "https://lucasrubo-api.vercel.app/api/chat";
+
+// URL relativa - usada apenas em desenvolvimento local
+const LOCAL_API_URL = "http://localhost:3000/api/chat";
 
 const GEMINI_API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models";
@@ -49,19 +53,43 @@ class GeminiService {
   }
 
   /**
-   * Verifica se está em ambiente de produção (Vercel)
-   * Apenas considera produção se estiver hospedado no Vercel (não em localhost)
+   * Retorna a URL da API correta baseado no ambiente
    */
-  private isProduction(): boolean {
-    const isLocalhost = typeof window !== 'undefined' && 
-      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-    return import.meta.env.PROD && !isLocalhost;
+  private getApiUrl(): string {
+    if (typeof window === "undefined") return LOCAL_API_URL;
+
+    const hostname = window.location.hostname;
+
+    // Se está rodando no Vercel, usa URL relativa
+    if (hostname.includes("vercel.app")) {
+      return LOCAL_API_URL;
+    }
+
+    // Em qualquer outro lugar (GitHub Pages, etc), usa a URL completa do Vercel
+    return VERCEL_API_URL;
   }
 
   /**
-   * Verifica se a API key está configurada para desenvolvimento
+   * Verifica se deve usar a API do Vercel (sempre em produção, nunca em localhost sem env)
    */
-  private hasLocalApiKey(): boolean {
+  private shouldUseVercelApi(): boolean {
+    if (typeof window === "undefined") return false;
+
+    const hostname = window.location.hostname;
+
+    // Em localhost, só usa Vercel API se tiver a env configurada
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return Boolean(import.meta.env.VITE_VERCEL_API_URL);
+    }
+
+    // Em produção (GitHub Pages, Vercel, etc), sempre usa a API do Vercel
+    return true;
+  }
+
+  /**
+   * Verifica se a API key está configurada (para desenvolvimento local)
+   */
+  private hasApiKey(): boolean {
     const hasKey = Boolean(this.apiKey && this.apiKey !== "your_api_key_here");
     return hasKey;
   }
@@ -117,13 +145,13 @@ class GeminiService {
     userMessage: string,
     previousMessages: ChatMessage[] = []
   ): Promise<string> {
-    // Em produção, usa a API route do Vercel
-    if (this.isProduction()) {
+    // Em produção (GitHub Pages, Vercel), usa a API do Vercel
+    if (this.shouldUseVercelApi()) {
       return this.callVercelApi(userMessage, previousMessages);
     }
 
-    // Em desenvolvimento, usa a API diretamente se a chave estiver configurada
-    if (this.hasLocalApiKey()) {
+    // Em desenvolvimento local, usa a API do Gemini diretamente se a chave estiver configurada
+    if (this.hasApiKey()) {
       return this.callGeminiDirect(userMessage, previousMessages);
     }
 
@@ -140,8 +168,10 @@ class GeminiService {
     userMessage: string,
     previousMessages: ChatMessage[]
   ): Promise<string> {
+    const apiUrl = this.getApiUrl();
+
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
