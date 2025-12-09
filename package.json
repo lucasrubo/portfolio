@@ -45,6 +45,7 @@
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",
     "@tanstack/react-query": "^5.83.0",
+    "@vercel/node": "^5.5.15",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -52,10 +53,7 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.24",
     "gsap": "^3.13.0",
-<<<<<<< HEAD
-=======
     "@google/generative-ai": "^0.21.0",
->>>>>>> 9fb75d8 (feat: Implement useScrollUnlock hook for scroll management)
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
@@ -79,14 +77,11 @@
     "@parcel/transformer-glsl": "^2.16.1",
     "@tailwindcss/typography": "^0.5.16",
     "@parcel/transformer-glsl": "^2.16.1",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.181.0",
-<<<<<<< HEAD
-    "@vercel/node": "^5.5.15",
-=======
->>>>>>> 9fb75d8 (feat: Implement useScrollUnlock hook for scroll management)
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.32.0",
