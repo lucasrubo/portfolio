@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+<<<<<<< HEAD
   "framework": null,
   "functions": {
     "api/index.ts": {
@@ -12,6 +13,13 @@
     {
       "source": "/api/:path*",
       "destination": "/api/index.ts"
+=======
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+>>>>>>> 9fb75d8 (feat: Implement useScrollUnlock hook for scroll management)
     }
   ]
 }
