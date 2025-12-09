@@ -7,11 +7,5 @@
     "api/index.ts": {
       "runtime": "nodejs24.x"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/index.ts"
-    }
-  ]
+  }
 }
