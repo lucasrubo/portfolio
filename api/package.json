@@ -1,0 +1,29 @@
+{
+  "name": "lucasrubo-api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "keywords": [
+    "api",
+    "hono",
+    "aprix"
+  ],
+  "author": "Lucas Rubo",
+  "license": "ISC",
+  "description": "API do assistente Aprix para o portfolio de Lucas Rubo",
+  "dependencies": {
+    "@hono/node-server": "^1.19.7",
+    "@scalar/hono-api-reference": "^0.9.27",
+    "dotenv": "^17.2.3",
+    "hono": "^4.10.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
