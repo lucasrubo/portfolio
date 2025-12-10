@@ -1,19 +1,9 @@
 import type { ChatMessage } from "../types";
 import { SYSTEM_PROMPT } from "../prompts/systemPrompt";
 
-<<<<<<< HEAD
-// URL da API - projeto no Vercel
-const VERCEL_API_URL =
-  import.meta.env.VITE_VERCEL_API_URL ||
-  "https://lucasrubo.vercel.app/api/chat";
-
-// URL relativa - usada apenas em desenvolvimento local
-const LOCAL_API_URL = "http://localhost:3000/api/chat";
-=======
 // URL da API - em produção usa a API route do Vercel
 // Em desenvolvimento, chama diretamente o Gemini se a chave estiver configurada
 const API_URL = "/api/chat";
->>>>>>> 9fb75d8 (feat: Implement useScrollUnlock hook for scroll management)
 
 const GEMINI_API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models";
@@ -59,51 +49,14 @@ class GeminiService {
   }
 
   /**
-<<<<<<< HEAD
-   * Retorna a URL da API correta baseado no ambiente
-   */
-  private getApiUrl(): string {
-    if (typeof window === "undefined") return LOCAL_API_URL;
-
-    const hostname = window.location.hostname;
-
-    // Se está rodando no Vercel, usa URL relativa
-    if (hostname.includes("vercel.app")) {
-      return LOCAL_API_URL;
-    }
-
-    // Em qualquer outro lugar (GitHub Pages, etc), usa a URL completa do Vercel
-    return VERCEL_API_URL;
-  }
-
-  /**
-   * Verifica se deve usar a API do Vercel (sempre em produção, nunca em localhost sem env)
-   */
-  private shouldUseVercelApi(): boolean {
-    if (typeof window === "undefined") return false;
-
-    const hostname = window.location.hostname;
-
-    // Em localhost, só usa Vercel API se tiver a env configurada
-    if (hostname === "localhost" || hostname === "127.0.0.1") {
-      return Boolean(import.meta.env.VITE_VERCEL_API_URL);
-    }
-
-    // Em produção (GitHub Pages, Vercel, etc), sempre usa a API do Vercel
-    return true;
-  }
-
-  /**
-   * Verifica se a API key está configurada (para desenvolvimento local)
-   */
-  private hasApiKey(): boolean {
-=======
    * Verifica se está em ambiente de produção (Vercel)
    * Apenas considera produção se estiver hospedado no Vercel (não em localhost)
    */
   private isProduction(): boolean {
-    const isLocalhost = typeof window !== 'undefined' && 
-      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const isLocalhost =
+      typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1");
     return import.meta.env.PROD && !isLocalhost;
   }
 
@@ -111,7 +64,6 @@ class GeminiService {
    * Verifica se a API key está configurada para desenvolvimento
    */
   private hasLocalApiKey(): boolean {
->>>>>>> 9fb75d8 (feat: Implement useScrollUnlock hook for scroll management)
     const hasKey = Boolean(this.apiKey && this.apiKey !== "your_api_key_here");
     return hasKey;
   }
@@ -167,15 +119,6 @@ class GeminiService {
     userMessage: string,
     previousMessages: ChatMessage[] = []
   ): Promise<string> {
-<<<<<<< HEAD
-    // Em produção (GitHub Pages, Vercel), usa a API do Vercel
-    if (this.shouldUseVercelApi()) {
-      return this.callVercelApi(userMessage, previousMessages);
-    }
-
-    // Em desenvolvimento local, usa a API do Gemini diretamente se a chave estiver configurada
-    if (this.hasApiKey()) {
-=======
     // Em produção, usa a API route do Vercel
     if (this.isProduction()) {
       return this.callVercelApi(userMessage, previousMessages);
@@ -183,7 +126,6 @@ class GeminiService {
 
     // Em desenvolvimento, usa a API diretamente se a chave estiver configurada
     if (this.hasLocalApiKey()) {
->>>>>>> 9fb75d8 (feat: Implement useScrollUnlock hook for scroll management)
       return this.callGeminiDirect(userMessage, previousMessages);
     }
 
@@ -200,15 +142,8 @@ class GeminiService {
     userMessage: string,
     previousMessages: ChatMessage[]
   ): Promise<string> {
-<<<<<<< HEAD
-    const apiUrl = this.getApiUrl();
-
-    try {
-      const response = await fetch(apiUrl, {
-=======
     try {
       const response = await fetch(API_URL, {
->>>>>>> 9fb75d8 (feat: Implement useScrollUnlock hook for scroll management)
         method: "POST",
         headers: {
           "Content-Type": "application/json",
