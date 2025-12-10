@@ -96,8 +96,3 @@ export interface GeminiResponse {
     };
   }[];
 }
-
-export interface GeminiServiceConfig {
-  apiKey: string;
-  model?: string;
-}

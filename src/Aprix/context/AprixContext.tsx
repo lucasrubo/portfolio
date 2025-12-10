@@ -12,7 +12,7 @@ import type {
   ChatMessage,
   AprixProviderProps,
 } from "../types";
-import { geminiService, ttsService } from "../services";
+import { ttsService } from "../services";
 
 const STORAGE_KEY = "aprix-mode";
 const MESSAGES_STORAGE_KEY = "aprix-messages";
@@ -170,16 +170,54 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
       }));
 
       try {
-        // Chamar o serviço do Gemini
-        const response = await geminiService.sendMessage(
-          content.trim(),
-          state.messages
-        );
+        // Determinar URL da API baseada no ambiente
+        const apiUrl = import.meta.env.VITE_API_URL;
+
+        const authKey = import.meta.env.VITE_AUTH_API_KEY;
+
+        if (!authKey) {
+          throw new Error("AUTH_API_KEY não configurada");
+        }
+
+        // Preparar histórico de mensagens
+        const history = state.messages.map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+        }));
+
+        // Fazer chamada para a API
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authKey}`,
+          },
+          body: JSON.stringify({
+            message: content.trim(),
+            history: history,
+          }),
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error("Chave de autenticação inválida ou ausente");
+          } else if (response.status === 400) {
+            throw new Error("Campo obrigatório ausente (ex.: message)");
+          } else if (response.status === 500) {
+            throw new Error("Erro interno no servidor");
+          } else {
+            throw new Error(`Erro na API: ${response.status}`);
+          }
+        }
+
+        const data = await response.json();
+        const assistantResponse =
+          data.response || "Resposta não recebida da API";
 
         const assistantMessage: ChatMessage = {
           id: generateId(),
           role: "assistant",
-          content: response,
+          content: assistantResponse,
           timestamp: new Date(),
         };
 
@@ -190,7 +228,7 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
         }));
 
         // Falar a resposta se TTS estiver ativo
-        ttsService.speak(response);
+        ttsService.speak(assistantResponse);
       } catch (error) {
         console.error("Error sending message:", error);
 
@@ -198,7 +236,9 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
           id: generateId(),
           role: "assistant",
           content:
-            "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
+            error instanceof Error
+              ? error.message
+              : "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
           timestamp: new Date(),
         };
 
@@ -213,7 +253,6 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
   );
 
   const clearMessages = useCallback(() => {
-    geminiService.resetHistory();
     ttsService.stop();
     localStorage.removeItem(MESSAGES_STORAGE_KEY);
     setState((prev) => ({ ...prev, messages: [] }));
