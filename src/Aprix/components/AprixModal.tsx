@@ -145,7 +145,7 @@ const AprixModal: React.FC = () => {
         {/* Container do Aprix - a esfera 3D será animada para cá */}
         <div
           id="aprix-modal-sphere-container"
-          className="flex justify-center items-center p-5 h-[325px] max-sm:h-[200px] relative -mt-8 z-20 pointer-events-none"
+          className="flex justify-center items-center p-5 h-[325px] max-sm:h-[230px] relative -mt-8 z-20 pointer-events-none"
         >
           {/* Espaço reservado para a esfera 3D */}
         </div>
@@ -169,7 +169,7 @@ const AprixModal: React.FC = () => {
           />
         </div>
         {/* Configurações */}
-        <div className=" px-5 py-4 aprix-border-light border-b-0 border-l-0 border-r-0">
+        <div className="hidden md:block px-5 py-4 aprix-border-light border-b-0 border-l-0 border-r-0">
           <label className="flex justify-between items-center cursor-pointer text-white/80 text-sm">
             <span>{t("aprix.fixedMode")}</span>
             <button
