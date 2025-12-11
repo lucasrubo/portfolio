@@ -155,7 +155,9 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
 
   const checkApiHealth = useCallback(async () => {
     try {
-      const healthUrl = "/health";
+      const healthUrl = import.meta.env.PROD
+        ? "https://aprix-five.vercel.app/health"
+        : "/health";
       const response = await fetch(healthUrl, {
         method: "GET",
       });
@@ -193,14 +195,12 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
 
       try {
         // Determinar URL da API baseada no ambiente
-        const apiUrl = "/api/chat";
+        const apiUrl = import.meta.env.PROD
+          ? "https://aprix-five.vercel.app/api/chat"
+          : "/api/chat";
 
         const authKey =
           "f759e2dd9776f3840e29ad933dd2cc5711a219aef18ab8263f3f6bb411a3e7e9";
-
-        if (!authKey) {
-          throw new Error("AUTH_API_KEY não configurada");
-        }
 
         // Preparar histórico de mensagens
         const history = state.messages.map((msg) => ({
