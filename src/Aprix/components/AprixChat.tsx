@@ -1,5 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { marked } from "marked";
 import type { AprixChatProps } from "../types";
+
+// Configurar marked para permitir HTML
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+});
 
 /**
  * AprixChat - Componente de chat estilo ChatGPT
@@ -79,6 +86,23 @@ const AprixChat: React.FC<AprixChatProps> = ({
 
   return (
     <div className="flex flex-col max-sm:h-full">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .aprix-message-content a {
+            color: #60a5fa !important;
+            text-decoration: underline !important;
+            text-decoration-color: #60a5fa !important;
+          }
+          .aprix-message-content a:hover {
+            color: #3b82f6 !important;
+          }
+          .aprix-message-content strong {
+            font-weight: 600 !important;
+          }
+        `,
+        }}
+      />
       {/* Área de mensagens - com fade no topo */}
       <div
         className="flex-1 overflow-y-auto py-4 space-y-4 aprix-scrollbar max-sm:py-6 max-sm:space-y-6 min-h-0 md:max-h-[500px]"
@@ -97,6 +121,10 @@ const AprixChat: React.FC<AprixChatProps> = ({
         ) : (
           messages.map((message) => {
             const isNew = !animatedIds.has(message.id);
+            const parsedContent = useMemo(
+              () => marked(message.content),
+              [message.content]
+            );
             return (
               <div
                 key={message.id}
@@ -111,9 +139,9 @@ const AprixChat: React.FC<AprixChatProps> = ({
                       : "bg-white/10 text-white/90 rounded-bl-md"
                   }`}
                 >
-                  <p
-                    className="m-0 text-sm leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: message.content }}
+                  <div
+                    className="m-0 text-sm leading-relaxed prose prose-invert max-w-none aprix-message-content"
+                    dangerouslySetInnerHTML={{ __html: parsedContent }}
                   />
                   <span className="block text-[10px] text-white/50 mt-1 text-right">
                     {formatTime(message.timestamp)}
