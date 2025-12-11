@@ -77,6 +77,15 @@ const AprixChat: React.FC<AprixChatProps> = ({
     }
   };
 
+  // Parse markdown content for all messages
+  const parsedMessages = useMemo(() => {
+    const parsed = new Map();
+    messages.forEach((message) => {
+      parsed.set(message.id, marked(message.content));
+    });
+    return parsed;
+  }, [messages]);
+
   const formatTime = (date: Date) => {
     return new Intl.DateTimeFormat("pt-BR", {
       hour: "2-digit",
@@ -121,10 +130,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
         ) : (
           messages.map((message) => {
             const isNew = !animatedIds.has(message.id);
-            const parsedContent = useMemo(
-              () => marked(message.content),
-              [message.content]
-            );
+            const parsedContent = parsedMessages.get(message.id) || "";
             return (
               <div
                 key={message.id}

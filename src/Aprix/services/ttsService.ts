@@ -317,6 +317,8 @@ class TTSService {
   private cleanTextForSpeech(text: string): string {
     return (
       text
+        // Remove HTML tags
+        .replace(/<[^>]*>/g, "")
         // Remove URLs/links
         .replace(/https?:\/\/[^\s]+/g, "")
         .replace(/www\.[^\s]+/g, "")
