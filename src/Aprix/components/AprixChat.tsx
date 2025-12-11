@@ -23,9 +23,11 @@ const AprixChat: React.FC<AprixChatProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Focus no input quando o chat abre
+  // Focus no input quando o chat abre (apenas em desktop)
   useEffect(() => {
-    inputRef.current?.focus();
+    if (!("ontouchstart" in window)) {
+      inputRef.current?.focus();
+    }
   }, []);
 
   // Marcar mensagens já existentes como animadas na inicialização
