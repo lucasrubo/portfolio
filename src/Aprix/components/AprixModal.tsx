@@ -145,7 +145,7 @@ const AprixModal: React.FC = () => {
         {/* Container do Aprix - a esfera 3D será animada para cá */}
         <div
           id="aprix-modal-sphere-container"
-          className="flex justify-center items-center p-5 h-[325px] max-sm:h-[230px] relative -mt-8 z-20 pointer-events-none"
+          className="flex justify-center items-center p-5 max-h-[325px] max-sm:max-h-[230px] relative -mt-8 z-20 pointer-events-none"
         >
           {/* Espaço reservado para a esfera 3D */}
         </div>
