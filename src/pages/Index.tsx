@@ -1,4 +1,3 @@
-import { LanguageProvider } from "@/contexts/LanguageContext";
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -14,28 +13,26 @@ import ClickSpark from "@/components/ClickSpark";
 
 const Index = () => {
   return (
-    <LanguageProvider>
-      <ClickSpark
-        sparkColor="#00bfff"
-        sparkSize={10}
-        sparkRadius={15}
-        sparkCount={8}
-        duration={400}
-      >
-        <div className="min-h-screen bg-background overflow-x-hidden">
-          <NavBar />
-          <Hero />
-          <About />
-          <Experience />
-          <Education />
-          <Skills />
-          <Projects />
-          <Certificates />
-          <Contact />
-          <Footer />
-        </div>
-      </ClickSpark>
-    </LanguageProvider>
+    <ClickSpark
+      sparkColor="#00bfff"
+      sparkSize={10}
+      sparkRadius={15}
+      sparkCount={8}
+      duration={400}
+    >
+      <div className="min-h-screen bg-background overflow-x-hidden">
+        <NavBar />
+        <Hero />
+        <About />
+        <Experience />
+        <Education />
+        <Skills />
+        <Projects />
+        <Certificates />
+        <Contact />
+        <Footer />
+      </div>
+    </ClickSpark>
   );
 };
 

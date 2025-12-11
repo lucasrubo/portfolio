@@ -6,27 +6,30 @@ import { Aprix } from "./Aprix";
 import Index from "./pages/Index";
 import { AprixProvider } from "./Aprix/context";
 import { AprixModal, AudioVisualizer } from "./Aprix";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AprixProvider initialMode="follow">
-        <section
-          id="aprix-section"
-          style={{
-            position: "relative",
-            maxWidth: "100%",
-          }}
-        >
-          <AudioVisualizer />
-          <AprixModal />
-          <Toaster />
-          <Sonner />
-          <Index />
-        </section>
-      </AprixProvider>
+      <LanguageProvider>
+        <AprixProvider initialMode="follow">
+          <section
+            id="aprix-section"
+            style={{
+              position: "relative",
+              maxWidth: "100%",
+            }}
+          >
+            <AudioVisualizer />
+            <AprixModal />
+            <Toaster />
+            <Sonner />
+            <Index />
+          </section>
+        </AprixProvider>
+      </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

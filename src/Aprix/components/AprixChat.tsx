@@ -11,6 +11,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
   ttsEnabled,
   onToggleTTS,
   onStopTTS,
+  apiOnline,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -52,7 +53,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim() && !isLoading) {
+    if (inputValue.trim() && !isLoading && apiOnline) {
       onSendMessage(inputValue);
       setInputValue("");
     }
@@ -61,7 +62,9 @@ const AprixChat: React.FC<AprixChatProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e);
+      if (inputValue.trim() && !isLoading && apiOnline) {
+        handleSubmit(e);
+      }
     }
   };
 
@@ -189,14 +192,16 @@ const AprixChat: React.FC<AprixChatProps> = ({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Digite sua mensagem..."
+          placeholder={
+            apiOnline ? "Digite sua mensagem..." : "Aprix está offline..."
+          }
           className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all disabled:opacity-50"
-          disabled={isLoading}
+          disabled={isLoading || !apiOnline}
         />
         <button
           type="submit"
           className="w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-secondary border-none text-white cursor-pointer flex items-center justify-center transition-all hover:opacity-90 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-          disabled={!inputValue.trim() || isLoading}
+          disabled={!inputValue.trim() || isLoading || !apiOnline}
         >
           <svg
             width="20"

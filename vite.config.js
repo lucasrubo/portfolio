@@ -8,6 +8,18 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/api": {
+        target: "https://aprix-five.vercel.app",
+        changeOrigin: true,
+        secure: true,
+      },
+      "/health": {
+        target: "https://aprix-five.vercel.app",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   plugins: [react()].filter(Boolean),
   resolve: {

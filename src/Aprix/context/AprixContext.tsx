@@ -13,6 +13,7 @@ import type {
   AprixProviderProps,
 } from "../types";
 import { ttsService } from "../services";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const STORAGE_KEY = "aprix-mode";
 const MESSAGES_STORAGE_KEY = "aprix-messages";
@@ -56,6 +57,7 @@ const initialState: AprixState = {
   messages: [],
   isLoading: false,
   ttsEnabled: ttsService.isActive(),
+  apiOnline: true,
 };
 
 const AprixContext = createContext<AprixContextType | undefined>(undefined);
@@ -89,6 +91,8 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
   // Modo pendente que será aplicado ao fechar o modal
   const [pendingMode, setPendingMode] = useState<AprixMode | null>(null);
 
+  const { language } = useLanguage();
+
   // Persistir modo no localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, state.mode);
@@ -99,7 +103,7 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
     if (state.messages.length > 0) {
       saveMessages(state.messages);
     }
-  }, [state.messages]);
+  }, [state.messages, language]);
 
   const openModal = useCallback(() => {
     // Ao abrir, resetar o pending mode
@@ -149,6 +153,24 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
     return state.mode;
   }, [state.isModalOpen, state.mode, pendingMode]);
 
+  const checkApiHealth = useCallback(async () => {
+    try {
+      const healthUrl = "/health";
+      const response = await fetch(healthUrl, {
+        method: "GET",
+      });
+      setState((prev) => ({ ...prev, apiOnline: response.ok }));
+    } catch (error) {
+      console.error("API health check failed:", error);
+      setState((prev) => ({ ...prev, apiOnline: false }));
+    }
+  }, []);
+
+  // Check API health on mount
+  useEffect(() => {
+    checkApiHealth();
+  }, [checkApiHealth]);
+
   const sendMessage = useCallback(
     async (content: string) => {
       if (!content.trim()) return;
@@ -171,9 +193,10 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
 
       try {
         // Determinar URL da API baseada no ambiente
-        const apiUrl = import.meta.env.VITE_API_URL;
+        const apiUrl = "/api/chat";
 
-        const authKey = import.meta.env.VITE_AUTH_API_KEY;
+        const authKey =
+          "f759e2dd9776f3840e29ad933dd2cc5711a219aef18ab8263f3f6bb411a3e7e9";
 
         if (!authKey) {
           throw new Error("AUTH_API_KEY não configurada");
@@ -195,6 +218,7 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
           body: JSON.stringify({
             message: content.trim(),
             history: history,
+            lang: language === "pt" ? "pt-BR" : "en-US",
           }),
         });
 
@@ -228,7 +252,7 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
         }));
 
         // Falar a resposta se TTS estiver ativo
-        ttsService.speak(assistantResponse);
+        ttsService.speak(assistantResponse, language);
       } catch (error) {
         console.error("Error sending message:", error);
 
@@ -249,7 +273,7 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
         }));
       }
     },
-    [state.messages]
+    [state.messages, language]
   );
 
   const clearMessages = useCallback(() => {
@@ -278,6 +302,7 @@ export const AprixProvider: React.FC<AprixProviderProps> = ({
     getDisplayMode,
     toggleTTS,
     stopTTS,
+    checkApiHealth,
   };
 
   return (

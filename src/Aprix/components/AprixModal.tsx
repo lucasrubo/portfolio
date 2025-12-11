@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useAprix } from "../context";
+import { useLanguage } from "../../contexts/LanguageContext";
 import AprixChat from "./AprixChat";
 
 /**
@@ -18,7 +19,10 @@ const AprixModal: React.FC = () => {
     ttsEnabled,
     toggleTTS,
     stopTTS,
+    apiOnline,
   } = useAprix();
+
+  const { t } = useLanguage();
 
   const displayMode = getDisplayMode();
 
@@ -108,11 +112,20 @@ const AprixModal: React.FC = () => {
       >
         {/* Header */}
         <div className="flex justify-between items-center px-5 py-4 aprix-border-light border-t-0 border-l-0 border-r-0">
-          <div></div>
+          <div className="flex items-center gap-2">
+            <div
+              className={`w-2 h-2 rounded-full ${
+                apiOnline ? "bg-green-500" : "bg-red-500"
+              }`}
+            />
+            <span className="text-white/60 text-sm">
+              {apiOnline ? t("aprix.online") : t("aprix.offline")}
+            </span>
+          </div>
           <button
             onClick={handleClose}
             className="w-9 h-9 border-none bg-white/10 rounded-full text-white/70 cursor-pointer flex items-center justify-center transition-all hover:bg-white/20 hover:text-white"
-            aria-label="Fechar modal"
+            aria-label={t("aprix.closeModal")}
           >
             <svg
               width="24"
@@ -141,7 +154,7 @@ const AprixModal: React.FC = () => {
           id="aprix-modal-title"
           className="self-center mb-4 m-0 text-lg font-semibold aprix-gradient-text z-20 relative"
         >
-          Aprix
+          {t("aprix.title")}
         </h2>
         {/* Chat - scroll passa por trás do container do Aprix */}
         <div className="rounded-3xl flex-1 min-h-0 p-5 pt-0 relative z-10">
@@ -152,12 +165,13 @@ const AprixModal: React.FC = () => {
             ttsEnabled={ttsEnabled}
             onToggleTTS={toggleTTS}
             onStopTTS={stopTTS}
+            apiOnline={apiOnline}
           />
         </div>
         {/* Configurações */}
         <div className=" px-5 py-4 aprix-border-light border-b-0 border-l-0 border-r-0">
           <label className="flex justify-between items-center cursor-pointer text-white/80 text-sm">
-            <span>Modo fixo (não seguir mouse)</span>
+            <span>{t("aprix.fixedMode")}</span>
             <button
               onClick={toggleMode}
               className={`relative w-12 h-[26px] border-none rounded-[13px] cursor-pointer p-0 transition-colors duration-300 ${

@@ -77,6 +77,52 @@ class TTSService {
   }
 
   /**
+   * Configura voz e idioma para o utterance
+   */
+  private setVoiceForLanguage(
+    utterance: SpeechSynthesisUtterance,
+    lang: string
+  ): void {
+    const voices = this.synth.getVoices();
+
+    let selectedVoice: SpeechSynthesisVoice | null = null;
+    let utteranceLang: string;
+
+    if (lang === "pt") {
+      // Prioridade para português
+      selectedVoice =
+        voices.find((v) => v.lang === "pt-BR") ||
+        voices.find((v) => v.lang === "pt-PT") ||
+        voices.find((v) => v.lang.startsWith("pt")) ||
+        null;
+      utteranceLang = "pt-BR";
+    } else {
+      // Inglês
+      selectedVoice =
+        voices.find((v) => v.lang === "en-US") ||
+        voices.find((v) => v.lang === "en-GB") ||
+        voices.find((v) => v.lang.startsWith("en")) ||
+        null;
+      utteranceLang = "en-US";
+    }
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      console.log(
+        "🔊 [TTS] Voz selecionada para",
+        lang + ":",
+        selectedVoice.name,
+        selectedVoice.lang
+      );
+    }
+
+    utterance.lang = utteranceLang;
+    utterance.rate = 1.5;
+    utterance.pitch = 0.8;
+    utterance.volume = 1.0;
+  }
+
+  /**
    * Registra callback para ser notificado quando está falando
    */
   onSpeakingChange(callback: SpeakingCallback): () => void {
@@ -176,7 +222,7 @@ class TTSService {
   /**
    * Fala o texto fornecido
    */
-  speak(text: string): void {
+  speak(text: string, lang: string = "pt"): void {
     if (!this.isEnabled || !text.trim()) {
       return;
     }
@@ -193,16 +239,8 @@ class TTSService {
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
 
-    // Configurar voz
-    if (this.preferredVoice) {
-      utterance.voice = this.preferredVoice;
-    }
-
-    // Configurações de fala
-    utterance.lang = "pt-BR";
-    utterance.rate = 1.5; // Velocidade (0.1 - 10)
-    utterance.pitch = 0.8; // Tom (0 - 2)
-    utterance.volume = 1.0; // Volume (0 - 1)
+    // Configurar voz baseada no idioma
+    this.setVoiceForLanguage(utterance, lang);
 
     // Eventos
     utterance.onstart = () => {
@@ -227,7 +265,7 @@ class TTSService {
   /**
    * Fala texto sem verificar se está habilitado (para Welcome/Stop)
    */
-  speakForced(text: string): void {
+  speakForced(text: string, lang: string = "pt"): void {
     const cleanText = this.cleanTextForSpeech(text);
     if (!cleanText) return;
 
@@ -235,14 +273,7 @@ class TTSService {
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
 
-    if (this.preferredVoice) {
-      utterance.voice = this.preferredVoice;
-    }
-
-    utterance.lang = "pt-BR";
-    utterance.rate = 1.4;
-    utterance.pitch = 0.6;
-    utterance.volume = 1.0;
+    this.setVoiceForLanguage(utterance, lang);
 
     utterance.onstart = () => {
       this.isSpeaking = true;

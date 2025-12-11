@@ -49,6 +49,7 @@ export interface AprixState {
   messages: ChatMessage[];
   isLoading: boolean;
   ttsEnabled: boolean;
+  apiOnline: boolean;
 }
 
 export interface AprixContextType extends AprixState {
@@ -61,6 +62,7 @@ export interface AprixContextType extends AprixState {
   getDisplayMode: () => AprixMode;
   toggleTTS: () => void;
   stopTTS: () => void;
+  checkApiHealth: () => Promise<void>;
 }
 
 export interface AprixModalProps {
@@ -75,6 +77,7 @@ export interface AprixChatProps {
   ttsEnabled: boolean;
   onToggleTTS: () => void;
   onStopTTS: () => void;
+  apiOnline: boolean;
 }
 
 export interface AprixProviderProps {
