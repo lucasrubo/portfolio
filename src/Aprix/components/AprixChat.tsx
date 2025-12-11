@@ -111,9 +111,10 @@ const AprixChat: React.FC<AprixChatProps> = ({
                       : "bg-white/10 text-white/90 rounded-bl-md"
                   }`}
                 >
-                  <p className="m-0 text-sm leading-relaxed">
-                    {message.content}
-                  </p>
+                  <p
+                    className="m-0 text-sm leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: message.content }}
+                  />
                   <span className="block text-[10px] text-white/50 mt-1 text-right">
                     {formatTime(message.timestamp)}
                   </span>
