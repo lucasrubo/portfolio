@@ -157,7 +157,7 @@ const AprixModal: React.FC = () => {
           {t("aprix.title")}
         </h2>
         {/* Chat - scroll passa por trás do container do Aprix */}
-        <div className="rounded-3xl flex-1 min-h-0 p-5 pt-0 relative z-10 max-h-[300px] sm:max-h-[350px] md:max-h-[500px] flex">
+        <div className="rounded-3xl flex-1 min-h-0 p-5 pt-0 relative z-10 max-h-none sm:max-h-[350px] md:max-h-[500px] flex">
           <AprixChat
             messages={messages}
             isLoading={isLoading}
