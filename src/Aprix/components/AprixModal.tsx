@@ -145,14 +145,14 @@ const AprixModal: React.FC = () => {
         {/* Container do Aprix - a esfera 3D será animada para cá */}
         <div
           id="aprix-modal-sphere-container"
-          className="flex justify-center items-center p-5 h-[325px] max-sm:h-[230px] relative -mt-8 z-20 pointer-events-none"
+          className="w-full flex justify-center items-center p-5 h-[125px] absolute max-sm:h-[200px] max-sm:relative -mt-8 z-20 pointer-events-none"
         >
           {/* Espaço reservado para a esfera 3D */}
         </div>
 
         <h2
           id="aprix-modal-title"
-          className="self-center mb-4 m-0 text-lg font-semibold aprix-gradient-text z-20 relative"
+          className="lg:hidden self-center mb-4 m-0 text-lg font-semibold aprix-gradient-text z-20 relative"
         >
           {t("aprix.title")}
         </h2>

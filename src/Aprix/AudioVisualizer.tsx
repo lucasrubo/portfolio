@@ -77,6 +77,9 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = () => {
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const composerRef = useRef<ReturnType<typeof createComposer> | null>(null);
 
+  // Ref para função de atualização de posição no modal
+  const updateModalPositionRef = useRef<(() => void) | null>(null);
+
   const positionState = useRef<PositionState>({
     currentX: window.innerWidth - CONTAINER_SIZE.width - OFFSET_FROM_EDGE,
     currentY: window.innerHeight - CONTAINER_SIZE.height - OFFSET_FROM_EDGE,
@@ -165,6 +168,22 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = () => {
           "aprix-modal-sphere-container"
         );
         if (modalContainer) {
+          // Definir função de atualização
+          updateModalPositionRef.current = () => {
+            if (modalContainer && container) {
+              const rect = modalContainer.getBoundingClientRect();
+              const newTargetX =
+                rect.left + rect.width / 2 - MODAL_SPHERE_SIZE / 2;
+              const newTargetY =
+                rect.top + rect.height / 2 - MODAL_SPHERE_SIZE / 2;
+              container.style.left = `${newTargetX}px`;
+              container.style.top = `${newTargetY}px`;
+            }
+          };
+
+          // Adicionar listener imediatamente
+          window.addEventListener("resize", updateModalPositionRef.current);
+
           // Aguardar para o modal terminar a animação de entrada (400ms no modal)
           setTimeout(() => {
             const rect = modalContainer.getBoundingClientRect();
@@ -199,6 +218,12 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = () => {
         }
       });
     } else {
+      // Remover listener de resize se existir
+      if (updateModalPositionRef.current) {
+        window.removeEventListener("resize", updateModalPositionRef.current);
+        updateModalPositionRef.current = null;
+      }
+
       // Resetar z-index
       container.style.zIndex = "999";
 
