@@ -108,7 +108,7 @@ const AprixModal: React.FC = () => {
     >
       <div
         ref={contentRef}
-        className="rounded-3xl bg-[#1c1c1cd9] aprix-border aprix-shadow backdrop-blur-sm  mt-20 w-full max-w-[680px] max-h-[90vh] flex flex-col max-sm:max-h-none max-sm:h-full max-sm:w-full max-sm:max-w-none max-sm:rounded-none max-sm:mt-0 max-sm:p-0 relative"
+        className="rounded-3xl bg-[#1c1c1cd9] aprix-border aprix-shadow backdrop-blur-sm  mt-20 w-full max-w-[680px] max-h-[90vh] sm:max-h-[75vh] md:max-h-[85vh] flex flex-col max-sm:max-h-none max-sm:h-full max-sm:w-full max-sm:max-w-none max-sm:rounded-none max-sm:mt-0 max-sm:p-0 relative"
       >
         {/* Header */}
         <div className="flex justify-between items-center px-5 py-4 aprix-border-light border-t-0 border-l-0 border-r-0">
@@ -157,7 +157,7 @@ const AprixModal: React.FC = () => {
           {t("aprix.title")}
         </h2>
         {/* Chat - scroll passa por trás do container do Aprix */}
-        <div className="rounded-3xl flex-1 min-h-0 p-5 pt-0 relative z-10">
+        <div className="rounded-3xl flex-1 min-h-0 p-5 pt-0 relative z-10 max-h-[300px] sm:max-h-[350px] md:max-h-[500px] flex">
           <AprixChat
             messages={messages}
             isLoading={isLoading}

@@ -114,7 +114,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
       />
       {/* Área de mensagens - com fade no topo */}
       <div
-        className="flex-1 overflow-y-auto py-4 space-y-4 aprix-scrollbar max-sm:py-6 max-sm:space-y-6 min-h-0 md:max-h-[500px]"
+        className="flex-1 overflow-y-auto py-4 space-y-4 aprix-scrollbar max-sm:py-6 max-sm:space-y-6 min-h-0 max-h-[300px] sm:max-h-[350px] md:max-h-[500px]"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent 0%, black 15%, black 100%)",
