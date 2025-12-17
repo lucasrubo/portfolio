@@ -41,7 +41,7 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = () => {
   const [isMobile, setIsMobile] = React.useState(false);
 
   // Integração com contexto do Aprix
-  const { openModal, mode, isModalOpen, setMode } = useAprix();
+  const { openModal, mode, isModalOpen, setMode, messages } = useAprix();
   const isFixedMode = mode === "fixed";
 
   // Ref para acessar isModalOpen dentro do loop de animação
@@ -58,6 +58,16 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = () => {
       composerRef.current.setSize(size, size);
     }
   }, [isModalOpen]);
+
+  // Recalcular posição da esfera quando mensagens mudam e modal está aberto
+  useEffect(() => {
+    if (isModalOpen && updateModalPositionRef.current) {
+      // Pequeno delay para garantir que o DOM foi atualizado
+      setTimeout(() => {
+        updateModalPositionRef.current?.();
+      }, 50);
+    }
+  }, [messages.length, isModalOpen]);
 
   // Estados para drag e throw
   const isDraggingRef = useRef(false);

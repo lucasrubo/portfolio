@@ -94,7 +94,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
   };
 
   return (
-    <div className="flex flex-col max-sm:h-full">
+    <div className="w-full flex flex-col max-sm:h-full">
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -123,7 +123,7 @@ const AprixChat: React.FC<AprixChatProps> = ({
         }}
       >
         {messages.length === 0 ? (
-          <div className="text-center py-8 text-white/60">
+          <div className="mt-12 text-center text-white/60">
             <p className="mb-2">Olá! Sou o Aprix, assistente do Lucas.</p>
             <p>Como posso ajudar você hoje?</p>
           </div>

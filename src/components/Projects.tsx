@@ -13,7 +13,7 @@ const Projects = () => {
         language === "pt"
           ? "Rede social inovadora para criação cinematográfica com IA. Crie sinopses, cartazes e imagens com inteligência artificial, compita no ranking e ganhe reconhecimento pela criatividade."
           : "Innovative social network for cinematic creation with AI. Create synopses, posters and images with artificial intelligence, compete in rankings and earn recognition for creativity.",
-      image: "./images/roteirum.png",
+      image: "/lucasrubo/images/roteirum.png",
       technologies: [
         "React",
         "TypeScript",
@@ -31,7 +31,7 @@ const Projects = () => {
         language === "pt"
           ? "Sistema ERP moderno e responsivo para gestão multi-empresa. Inclui dashboard administrativo, criação de pedidos, gerenciamento de vendas e interface unificada para múltiplas empresas."
           : "Modern and responsive multi-company ERP system. Includes administrative dashboard, order creation, sales management and unified interface for multiple companies.",
-      image: "./images/erp.png",
+      image: "/lucasrubo/images/erp.png",
       technologies: [
         "React",
         "TypeScript",
@@ -49,7 +49,7 @@ const Projects = () => {
         language === "pt"
           ? "Portfólio pessoal moderno e elegante desenvolvido com React e TypeScript. Apresenta projetos, habilidades e informações profissionais de forma interativa e responsiva."
           : "Modern and elegant personal portfolio developed with React and TypeScript. Showcases projects, skills and professional information in an interactive and responsive way.",
-      image: "./images/portfolio.png",
+      image: "/lucasrubo/images/portfolio.png",
       technologies: [
         "React",
         "TypeScript",

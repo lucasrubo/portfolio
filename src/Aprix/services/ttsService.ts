@@ -5,6 +5,7 @@
 
 // Chave para persistência no localStorage
 const STORAGE_KEY = "aprix-tts-enabled";
+const VOICE_STORAGE_KEY = "aprix-tts-voice";
 
 // Callback para notificar quando está falando (para o visualizer)
 type SpeakingCallback = (isSpeaking: boolean, intensity: number) => void;
@@ -13,6 +14,7 @@ class TTSService {
   private synth: SpeechSynthesis;
   private isEnabled: boolean;
   private preferredVoice: SpeechSynthesisVoice | null = null;
+  private preferredVoiceName: string | null = null;
   private isSpeaking: boolean = false;
   private speakingCallbacks: Set<SpeakingCallback> = new Set();
   private intensityInterval: ReturnType<typeof setInterval> | null = null;
@@ -22,6 +24,7 @@ class TTSService {
   constructor() {
     this.synth = window.speechSynthesis;
     this.isEnabled = this.loadPreference();
+    this.preferredVoiceName = this.loadPreferredVoice();
     this.loadVoices();
   }
 
@@ -38,10 +41,24 @@ class TTSService {
   }
 
   /**
+   * Carrega a voz preferida do localStorage
+   */
+  private loadPreferredVoice(): string | null {
+    return localStorage.getItem(VOICE_STORAGE_KEY);
+  }
+
+  /**
    * Salva a preferência no localStorage
    */
   private savePreference(): void {
     localStorage.setItem(STORAGE_KEY, String(this.isEnabled));
+  }
+
+  /**
+   * Salva a voz preferida no localStorage
+   */
+  private savePreferredVoice(voiceName: string): void {
+    localStorage.setItem(VOICE_STORAGE_KEY, voiceName);
   }
 
   /**
@@ -50,6 +67,20 @@ class TTSService {
   private loadVoices(): void {
     const setVoice = () => {
       const voices = this.synth.getVoices();
+
+      // Se há uma voz preferida salva, tenta usá-la
+      if (this.preferredVoiceName) {
+        this.preferredVoice =
+          voices.find((v) => v.name === this.preferredVoiceName) || null;
+        if (this.preferredVoice) {
+          console.log(
+            "🔊 [TTS] Voz preferida carregada:",
+            this.preferredVoice.name,
+            this.preferredVoice.lang
+          );
+          return;
+        }
+      }
 
       // Prioridade: pt-BR > pt-PT > qualquer pt > padrão
       this.preferredVoice =
@@ -88,22 +119,28 @@ class TTSService {
     let selectedVoice: SpeechSynthesisVoice | null = null;
     let utteranceLang: string;
 
-    if (lang === "pt") {
-      // Prioridade para português
-      selectedVoice =
-        voices.find((v) => v.lang === "pt-BR") ||
-        voices.find((v) => v.lang === "pt-PT") ||
-        voices.find((v) => v.lang.startsWith("pt")) ||
-        null;
-      utteranceLang = "pt-BR";
+    // Se há uma voz preferida, use-a se for do idioma correto
+    if (this.preferredVoice && this.preferredVoice.lang.startsWith(lang)) {
+      selectedVoice = this.preferredVoice;
+      utteranceLang = this.preferredVoice.lang;
     } else {
-      // Inglês
-      selectedVoice =
-        voices.find((v) => v.lang === "en-US") ||
-        voices.find((v) => v.lang === "en-GB") ||
-        voices.find((v) => v.lang.startsWith("en")) ||
-        null;
-      utteranceLang = "en-US";
+      if (lang === "pt") {
+        // Prioridade para português
+        selectedVoice =
+          voices.find((v) => v.lang === "pt-BR") ||
+          voices.find((v) => v.lang === "pt-PT") ||
+          voices.find((v) => v.lang.startsWith("pt")) ||
+          null;
+        utteranceLang = "pt-BR";
+      } else {
+        // Inglês
+        selectedVoice =
+          voices.find((v) => v.lang === "en-US") ||
+          voices.find((v) => v.lang === "en-GB") ||
+          voices.find((v) => v.lang.startsWith("en")) ||
+          null;
+        utteranceLang = "en-US";
+      }
     }
 
     if (selectedVoice) {
@@ -350,6 +387,29 @@ class TTSService {
    */
   getAvailableVoices(): SpeechSynthesisVoice[] {
     return this.synth.getVoices();
+  }
+
+  /**
+   * Define a voz preferida
+   */
+  setPreferredVoice(voiceName: string): boolean {
+    const voices = this.synth.getVoices();
+    const voice = voices.find((v) => v.name === voiceName);
+    if (voice) {
+      this.preferredVoice = voice;
+      this.preferredVoiceName = voiceName;
+      this.savePreferredVoice(voiceName);
+      console.log("🔊 [TTS] Voz preferida definida:", voice.name, voice.lang);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Retorna o nome da voz preferida atual
+   */
+  getPreferredVoiceName(): string | null {
+    return this.preferredVoiceName;
   }
 }
 
