@@ -24,6 +24,6 @@ Languages that I like to learn and study :arrow_down:
 - :wrench: Jenkins Pipelines
 
 My resume:
-https://lucasrubo.github.io/lucasrubo/
+https://lucasrubo.github.io/lucasrubo/portfolio
 
 [![lucasrubo's github stats](https://github-readme-stats.vercel.app/api?username=lucasrubo&theme=radical)](https://github.com/lucasrubo/github-readme-stats)
