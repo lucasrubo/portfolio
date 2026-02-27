@@ -4147,119 +4147,119 @@ void main() {
 
 			#endif
 
-		}`};class sq extends hu{constructor(){super();const e=rq;this.uniforms=Bf.clone(e.uniforms),this.material=new u7({name:e.name,uniforms:this.uniforms,vertexShader:e.vertexShader,fragmentShader:e.fragmentShader}),this.fsQuad=new _b(this.material),this._outputColorSpace=null,this._toneMapping=null}render(e,n,i){this.uniforms.tDiffuse.value=i.texture,this.uniforms.toneMappingExposure.value=e.toneMappingExposure,(this._outputColorSpace!==e.outputColorSpace||this._toneMapping!==e.toneMapping)&&(this._outputColorSpace=e.outputColorSpace,this._toneMapping=e.toneMapping,this.material.defines={},_t.getTransfer(this._outputColorSpace)===Ct&&(this.material.defines.SRGB_TRANSFER=""),this._toneMapping===MP?this.material.defines.LINEAR_TONE_MAPPING="":this._toneMapping===wP?this.material.defines.REINHARD_TONE_MAPPING="":this._toneMapping===AP?this.material.defines.CINEON_TONE_MAPPING="":this._toneMapping===CP?this.material.defines.ACES_FILMIC_TONE_MAPPING="":this._toneMapping===RP&&(this.material.defines.AGX_TONE_MAPPING=""),this.material.needsUpdate=!0),this.renderToScreen===!0?(e.setRenderTarget(null),this.fsQuad.render(e)):(e.setRenderTarget(n),this.clear&&e.clear(e.autoClearColor,e.autoClearDepth,e.autoClearStencil),this.fsQuad.render(e))}dispose(){this.material.dispose(),this.fsQuad.dispose()}}const aq=`uniform float u_time;
-
-varying vec2 vUv;
-
-vec3 mod289(vec3 x)
-{
-  return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-
-vec4 mod289(vec4 x)
-{
-  return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-
-vec4 permute(vec4 x)
-{
-  return mod289(((x*34.0)+10.0)*x);
-}
-
-vec4 taylorInvSqrt(vec4 r)
-{
-  return 1.79284291400159 - 0.85373472095314 * r;
-}
-
-vec3 fade(vec3 t) {
-  return t*t*t*(t*(t*6.0-15.0)+10.0);
-}
-
-// Classic Perlin noise, periodic variant
-float pnoise(vec3 P, vec3 rep)
-{
-  vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period
-  vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period
-  Pi0 = mod289(Pi0);
-  Pi1 = mod289(Pi1);
-  vec3 Pf0 = fract(P); // Fractional part for interpolation
-  vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0
-  vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
-  vec4 iy = vec4(Pi0.yy, Pi1.yy);
-  vec4 iz0 = Pi0.zzzz;
-  vec4 iz1 = Pi1.zzzz;
-
-  vec4 ixy = permute(permute(ix) + iy);
-  vec4 ixy0 = permute(ixy + iz0);
-  vec4 ixy1 = permute(ixy + iz1);
-
-  vec4 gx0 = ixy0 * (1.0 / 7.0);
-  vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;
-  gx0 = fract(gx0);
-  vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
-  vec4 sz0 = step(gz0, vec4(0.0));
-  gx0 -= sz0 * (step(0.0, gx0) - 0.5);
-  gy0 -= sz0 * (step(0.0, gy0) - 0.5);
-
-  vec4 gx1 = ixy1 * (1.0 / 7.0);
-  vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;
-  gx1 = fract(gx1);
-  vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
-  vec4 sz1 = step(gz1, vec4(0.0));
-  gx1 -= sz1 * (step(0.0, gx1) - 0.5);
-  gy1 -= sz1 * (step(0.0, gy1) - 0.5);
-
-  vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
-  vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
-  vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
-  vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
-  vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
-  vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
-  vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
-  vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
-
-  vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));
-  g000 *= norm0.x;
-  g010 *= norm0.y;
-  g100 *= norm0.z;
-  g110 *= norm0.w;
-  vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));
-  g001 *= norm1.x;
-  g011 *= norm1.y;
-  g101 *= norm1.z;
-  g111 *= norm1.w;
-
-  float n000 = dot(g000, Pf0);
-  float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));
-  float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));
-  float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));
-  float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));
-  float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));
-  float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));
-  float n111 = dot(g111, Pf1);
-
-  vec3 fade_xyz = fade(Pf0);
-  vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);
-  vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);
-  float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
-  return 2.2 * n_xyz;
-}
-
-uniform float u_frequency;
-
-void main() {
-    vUv = uv;
-    float noise = 3.0 * pnoise(position + u_time, vec3(10.0));
-    float displacement = (u_frequency / 30.) * (noise / 10.);
-    vec3 newPosition = position + normal * displacement;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-}`,oq=`uniform vec3 u_colorPrimary;
-uniform vec3 u_colorSecondary;
-varying vec2 vUv;
-
-void main() {
-    vec3 color = mix(u_colorPrimary, u_colorSecondary, vUv.y);
-    gl_FragColor = vec4(color, 1.0);
+		}`};class sq extends hu{constructor(){super();const e=rq;this.uniforms=Bf.clone(e.uniforms),this.material=new u7({name:e.name,uniforms:this.uniforms,vertexShader:e.vertexShader,fragmentShader:e.fragmentShader}),this.fsQuad=new _b(this.material),this._outputColorSpace=null,this._toneMapping=null}render(e,n,i){this.uniforms.tDiffuse.value=i.texture,this.uniforms.toneMappingExposure.value=e.toneMappingExposure,(this._outputColorSpace!==e.outputColorSpace||this._toneMapping!==e.toneMapping)&&(this._outputColorSpace=e.outputColorSpace,this._toneMapping=e.toneMapping,this.material.defines={},_t.getTransfer(this._outputColorSpace)===Ct&&(this.material.defines.SRGB_TRANSFER=""),this._toneMapping===MP?this.material.defines.LINEAR_TONE_MAPPING="":this._toneMapping===wP?this.material.defines.REINHARD_TONE_MAPPING="":this._toneMapping===AP?this.material.defines.CINEON_TONE_MAPPING="":this._toneMapping===CP?this.material.defines.ACES_FILMIC_TONE_MAPPING="":this._toneMapping===RP&&(this.material.defines.AGX_TONE_MAPPING=""),this.material.needsUpdate=!0),this.renderToScreen===!0?(e.setRenderTarget(null),this.fsQuad.render(e)):(e.setRenderTarget(n),this.clear&&e.clear(e.autoClearColor,e.autoClearDepth,e.autoClearStencil),this.fsQuad.render(e))}dispose(){this.material.dispose(),this.fsQuad.dispose()}}const aq=`uniform float u_time;\r
+\r
+varying vec2 vUv;\r
+\r
+vec3 mod289(vec3 x)\r
+{\r
+  return x - floor(x * (1.0 / 289.0)) * 289.0;\r
+}\r
+\r
+vec4 mod289(vec4 x)\r
+{\r
+  return x - floor(x * (1.0 / 289.0)) * 289.0;\r
+}\r
+\r
+vec4 permute(vec4 x)\r
+{\r
+  return mod289(((x*34.0)+10.0)*x);\r
+}\r
+\r
+vec4 taylorInvSqrt(vec4 r)\r
+{\r
+  return 1.79284291400159 - 0.85373472095314 * r;\r
+}\r
+\r
+vec3 fade(vec3 t) {\r
+  return t*t*t*(t*(t*6.0-15.0)+10.0);\r
+}\r
+\r
+// Classic Perlin noise, periodic variant\r
+float pnoise(vec3 P, vec3 rep)\r
+{\r
+  vec3 Pi0 = mod(floor(P), rep); // Integer part, modulo period\r
+  vec3 Pi1 = mod(Pi0 + vec3(1.0), rep); // Integer part + 1, mod period\r
+  Pi0 = mod289(Pi0);\r
+  Pi1 = mod289(Pi1);\r
+  vec3 Pf0 = fract(P); // Fractional part for interpolation\r
+  vec3 Pf1 = Pf0 - vec3(1.0); // Fractional part - 1.0\r
+  vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);\r
+  vec4 iy = vec4(Pi0.yy, Pi1.yy);\r
+  vec4 iz0 = Pi0.zzzz;\r
+  vec4 iz1 = Pi1.zzzz;\r
+\r
+  vec4 ixy = permute(permute(ix) + iy);\r
+  vec4 ixy0 = permute(ixy + iz0);\r
+  vec4 ixy1 = permute(ixy + iz1);\r
+\r
+  vec4 gx0 = ixy0 * (1.0 / 7.0);\r
+  vec4 gy0 = fract(floor(gx0) * (1.0 / 7.0)) - 0.5;\r
+  gx0 = fract(gx0);\r
+  vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);\r
+  vec4 sz0 = step(gz0, vec4(0.0));\r
+  gx0 -= sz0 * (step(0.0, gx0) - 0.5);\r
+  gy0 -= sz0 * (step(0.0, gy0) - 0.5);\r
+\r
+  vec4 gx1 = ixy1 * (1.0 / 7.0);\r
+  vec4 gy1 = fract(floor(gx1) * (1.0 / 7.0)) - 0.5;\r
+  gx1 = fract(gx1);\r
+  vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);\r
+  vec4 sz1 = step(gz1, vec4(0.0));\r
+  gx1 -= sz1 * (step(0.0, gx1) - 0.5);\r
+  gy1 -= sz1 * (step(0.0, gy1) - 0.5);\r
+\r
+  vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);\r
+  vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);\r
+  vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);\r
+  vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);\r
+  vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);\r
+  vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);\r
+  vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);\r
+  vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);\r
+\r
+  vec4 norm0 = taylorInvSqrt(vec4(dot(g000, g000), dot(g010, g010), dot(g100, g100), dot(g110, g110)));\r
+  g000 *= norm0.x;\r
+  g010 *= norm0.y;\r
+  g100 *= norm0.z;\r
+  g110 *= norm0.w;\r
+  vec4 norm1 = taylorInvSqrt(vec4(dot(g001, g001), dot(g011, g011), dot(g101, g101), dot(g111, g111)));\r
+  g001 *= norm1.x;\r
+  g011 *= norm1.y;\r
+  g101 *= norm1.z;\r
+  g111 *= norm1.w;\r
+\r
+  float n000 = dot(g000, Pf0);\r
+  float n100 = dot(g100, vec3(Pf1.x, Pf0.yz));\r
+  float n010 = dot(g010, vec3(Pf0.x, Pf1.y, Pf0.z));\r
+  float n110 = dot(g110, vec3(Pf1.xy, Pf0.z));\r
+  float n001 = dot(g001, vec3(Pf0.xy, Pf1.z));\r
+  float n101 = dot(g101, vec3(Pf1.x, Pf0.y, Pf1.z));\r
+  float n011 = dot(g011, vec3(Pf0.x, Pf1.yz));\r
+  float n111 = dot(g111, Pf1);\r
+\r
+  vec3 fade_xyz = fade(Pf0);\r
+  vec4 n_z = mix(vec4(n000, n100, n010, n110), vec4(n001, n101, n011, n111), fade_xyz.z);\r
+  vec2 n_yz = mix(n_z.xy, n_z.zw, fade_xyz.y);\r
+  float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);\r
+  return 2.2 * n_xyz;\r
+}\r
+\r
+uniform float u_frequency;\r
+\r
+void main() {\r
+    vUv = uv;\r
+    float noise = 3.0 * pnoise(position + u_time, vec3(10.0));\r
+    float displacement = (u_frequency / 30.) * (noise / 10.);\r
+    vec3 newPosition = position + normal * displacement;\r
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);\r
+}`,oq=`uniform vec3 u_colorPrimary;\r
+uniform vec3 u_colorSecondary;\r
+varying vec2 vUv;\r
+\r
+void main() {\r
+    vec3 color = mix(u_colorPrimary, u_colorSecondary, vUv.y);\r
+    gl_FragColor = vec4(color, 1.0);\r
 }`,lq=t=>{const e=new Z_({antialias:!0,alpha:!0});return e.setSize(st.width,st.height),e.setClearColor(0,0),e.outputColorSpace=dn,e.domElement.style.pointerEvents="none",t.appendChild(e.domElement),e},cq=()=>new s3,uq=()=>{const t=new Ji(45,st.width/st.height,.1,1e3);return t.position.set(0,0,14),t.lookAt(0,0,0),t},fq=(t,e,n)=>{const i=new nq(e,n),r=new Kc(new Ve(st.width,st.height),H0.strength,H0.radius,H0.threshold),s=new tq(t);s.addPass(i),s.addPass(r);const a=new sq;return s.addPass(a),s},dq=()=>{const t={u_time:{type:"f",value:0},u_frequency:{type:"f",value:0},u_colorPrimary:{type:"v3",value:new Y(Pl.primary.r,Pl.primary.g,Pl.primary.b)},u_colorSecondary:{type:"v3",value:new Y(Pl.secondary.r,Pl.secondary.g,Pl.secondary.b)}},e=new Vn({uniforms:t,vertexShader:aq,fragmentShader:oq}),n=new J_(XM.radius,XM.detail),i=new Dr(n,e);return i.material.wireframe=!0,i.material.wireframeLinewidth=.1,{mesh:i,uniforms:t}},hq=(t,e,n,i,r,s)=>{const a=Yi.baseRadius+Math.sin(t*Yi.variationSpeed)*Yi.radiusVariation;let o,l;e?(o=n,l=i):(o=r+st.width/2,l=s+st.height/2);const c=t*Yi.speed1,u=t*Yi.speed2,f=o+Math.cos(c)*a+Math.sin(u)*Yi.additionalOffset-st.width/2,d=l+Math.sin(c)*a+Math.cos(u)*Yi.additionalOffset-st.height/2;return{targetX:f,targetY:d}},pq=(t,e,n)=>{const i=t+Math.cos(n)*Yi.offsetRadius-st.width/2,r=e+Math.sin(n)*Yi.offsetRadius-st.height/2;return{targetX:i,targetY:r}},_h=(t,e)=>({clampedX:Math.max(0,Math.min(t,window.innerWidth-st.width)),clampedY:e}),mq=()=>{const t=A.useRef(null),e=A.useRef(null),n=A.useRef(null),[i,r]=de.useState(!1),{openModal:s,mode:a,isModalOpen:o,setMode:l,messages:c}=o3(),u=a==="fixed",f=A.useRef(o);A.useEffect(()=>{if(f.current=o,y.current&&_.current&&T.current){const E=o?yo:st.width;y.current.setSize(E,E),_.current.aspect=1,_.current.updateProjectionMatrix(),T.current.setSize(E,E)}},[o]),A.useEffect(()=>{o&&M.current&&setTimeout(()=>{var E;(E=M.current)==null||E.call(M)},50)},[c.length,o]);const d=A.useRef(!1),h=A.useRef({x:0,y:0,time:0}),x=A.useRef({x:0,y:0}),m=A.useRef({x:0,y:0}),g=A.useRef(!1),p=A.useRef([]),v=A.useRef(0),y=A.useRef(null),_=A.useRef(null),T=A.useRef(null),M=A.useRef(null),b=A.useRef({currentX:window.innerWidth-st.width-ra,currentY:window.innerHeight-st.height-ra,isLocked:!0,scrollDistance:0}),C=A.useRef({x:0,y:0,isMoving:!1,lastX:0,lastY:0}),S=A.useRef({isInZone:!1,zonaCenterX:0,zonaCenterY:0,shouldComeToMouse:!1,idleTimer:0,initialOrbitAngle:0});return A.useEffect(()=>{const E=()=>{const O=window.innerWidth<=768||"ontouchstart"in window;r(O),O&&l("fixed")};return E(),window.addEventListener("resize",E),()=>window.removeEventListener("resize",E)},[l]),A.useEffect(()=>ws.onSpeakingChange((O,U)=>{v.current=O?U:0}),[]),A.useEffect(()=>{(i||u)&&(b.current.isLocked=!0)},[i,u]),YX(C,S),$X(b,u),A.useEffect(()=>{if(!t.current)return;const E=t.current;if(o){e.current&&(e.current.kill(),e.current=null),n.current&&(n.current.kill(),n.current=null),g.current=!1,d.current=!1,m.current={x:0,y:0},S.current.isInZone=!1,S.current.shouldComeToMouse=!1,S.current.idleTimer=0;const O=()=>{const U=document.getElementById("aprix-modal-sphere-container");U?(M.current=()=>{if(U&&E){const H=U.getBoundingClientRect(),P=H.left+H.width/2-yo/2,k=H.top+H.height/2-yo/2;E.style.left=`${P}px`,E.style.top=`${k}px`}},window.addEventListener("resize",M.current),setTimeout(()=>{const H=U.getBoundingClientRect(),P=H.left+H.width/2-yo/2,k=H.top+H.height/2-yo/2;E.style.zIndex="10000",Mr.to(E,{left:P,top:k,width:yo,height:yo,duration:.4,ease:"power2.out"})},350)):requestAnimationFrame(O)};requestAnimationFrame(O),p.current.forEach(U=>{U&&Mr.to(U,{opacity:0,duration:.3})})}else{M.current&&(window.removeEventListener("resize",M.current),M.current=null),E.style.zIndex="999",b.current.isLocked=!0;const O=window.innerWidth-st.width-ra,U=window.innerHeight-st.height-ra;Mr.to(E,{left:O,top:U,width:st.width,height:st.height,duration:.5,ease:"power2.out",onComplete:()=>{b.current.currentX=O,b.current.currentY=U;const H=O+st.width/2,P=U+st.height/2;p.current.forEach(k=>{k&&(k.style.left=`${H}px`,k.style.top=`${P}px`)})}}),p.current.forEach((H,P)=>{H&&Mr.to(H,{opacity:ms.opacities[P],duration:.3,delay:.3})})}},[o]),A.useEffect(()=>{const E=window.innerWidth-st.width/2-ra,O=window.innerHeight-st.height/2-ra;p.current.forEach((U,H)=>{if(!U){console.log("Blob ref",H,"is null");return}U.style.left=`${E}px`,U.style.top=`${O}px`,U.style.transform="translate(-50%, -50%)"})},[]),A.useEffect(()=>{if(!t.current)return;const E=t.current,O=lq(E),U=cq(),H=uq(),P=fq(O,U,H),{mesh:k,uniforms:N}=dq();U.add(k),y.current=O,_.current=H,T.current=P,E.style.position="fixed",E.style.left=`${b.current.currentX}px`,E.style.top=`${b.current.currentY}px`;const I=new eb,z=()=>{const ne=I.getElapsedTime(),Te=qM.baseFrequency*(1+.3*Math.sin(ne*2)),Se=v.current*qM.frequencyMultiplier;return Math.max(Te,Se)},F=()=>{const ne=I.getDelta(),{currentX:Te,currentY:Se,isLocked:xe}=b.current;if(f.current){N.u_time.value=I.getElapsedTime(),N.u_frequency.value=z(),k.rotation.y+=ne*Pu,P.render(),requestAnimationFrame(F);return}if(n.current){N.u_time.value=I.getElapsedTime(),N.u_frequency.value=z(),k.rotation.y+=ne*Pu,P.render(),requestAnimationFrame(F);return}if(g.current&&!d.current){b.current.currentX+=m.current.x*ne,b.current.currentY+=m.current.y*ne,m.current.x*=.95,m.current.y*=.95;const{clampedX:he,clampedY:fe}=_h(b.current.currentX,b.current.currentY);b.current.currentX=he,b.current.currentY=fe,E&&(E.style.left=`${he}px`,E.style.top=`${fe}px`);const le=he+st.width/2,oe=fe+st.height/2;p.current.forEach((we,be)=>{if(!we)return;const D=parseFloat(we.style.left)||le,R=parseFloat(we.style.top)||oe,q=be===0?.2:.1-be*.02,se=D+(le-D)*q,re=R+(oe-R)*q;we.style.left=`${se}px`,we.style.top=`${re}px`}),Math.abs(m.current.x)<10&&Math.abs(m.current.y)<10&&(g.current=!1,m.current={x:0,y:0}),N.u_time.value=I.getElapsedTime(),N.u_frequency.value=z(),k.rotation.y+=ne*Pu,P.render(),requestAnimationFrame(F);return}if(d.current){const he=b.current.currentX+st.width/2,fe=b.current.currentY+st.height/2;p.current.forEach((le,oe)=>{if(!le)return;const we=parseFloat(le.style.left)||he,be=parseFloat(le.style.top)||fe,D=oe===0?.25:.12-oe*.03,R=we+(he-we)*D,q=be+(fe-be)*D;le.style.left=`${R}px`,le.style.top=`${q}px`}),N.u_time.value=I.getElapsedTime(),N.u_frequency.value=z(),k.rotation.y+=ne*Pu,P.render(),requestAnimationFrame(F);return}if(xe){if(!n.current){e.current&&(e.current.kill(),e.current=null),S.current.isInZone=!1,S.current.shouldComeToMouse=!1,S.current.idleTimer=0;const he=window.innerWidth-st.width-ra,fe=window.innerHeight-st.height-ra;n.current=Mr.to({x:Te,y:Se},{x:he,y:fe,duration:1.5,ease:"power2.inOut",onUpdate:function(){b.current.currentX=this.targets()[0].x,b.current.currentY=this.targets()[0].y,E&&(E.style.left=`${this.targets()[0].x}px`,E.style.top=`${this.targets()[0].y}px`);const le=this.targets()[0].x+st.width/2,oe=this.targets()[0].y+st.height/2;p.current.forEach((we,be)=>{if(!we)return;const D=parseFloat(we.style.left)||le,R=parseFloat(we.style.top)||oe,q=be===0?.15:.08-be*.02,se=D+(le-D)*q,re=R+(oe-R)*q;we.style.left=`${se}px`,we.style.top=`${re}px`})},onComplete:()=>{n.current=null}})}}else{n.current&&(n.current.kill(),n.current=null);const{isMoving:he}=C.current,{isInZone:fe,shouldComeToMouse:le}=S.current;if(!he&&!fe?(S.current.idleTimer+=ne,S.current.idleTimer>=Kp.idleDelay&&!le&&(S.current.shouldComeToMouse=!0,S.current.initialOrbitAngle=Math.random()*Math.PI*2,S.current.zonaCenterX=C.current.x,S.current.zonaCenterY=C.current.y)):he&&(S.current.idleTimer=0),le&&!e.current){const{targetX:oe,targetY:we}=pq(S.current.zonaCenterX,S.current.zonaCenterY,S.current.initialOrbitAngle);e.current=Mr.to({x:Te,y:Se},{x:oe,y:we,duration:Kp.tweenDuration,ease:"power1.inOut",onUpdate:function(){const{clampedX:be,clampedY:D}=_h(this.targets()[0].x,this.targets()[0].y);b.current.currentX=be,b.current.currentY=D,E&&(E.style.left=`${be}px`,E.style.top=`${D}px`)},onComplete:()=>{S.current.isInZone=!0,S.current.shouldComeToMouse=!1,e.current=null}})}else if(!le){const oe=I.getElapsedTime(),{targetX:we,targetY:be}=hq(oe,fe,S.current.zonaCenterX,S.current.zonaCenterY,Te,Se),D=we-Te,R=be-Se,q=Yi.lerpFactor*ne;b.current.currentX+=D*q,b.current.currentY+=R*q;const{clampedX:se,clampedY:re}=_h(b.current.currentX,b.current.currentY);b.current.currentX=se,b.current.currentY=re,E&&(E.style.left=`${se}px`,E.style.top=`${re}px`)}}const Ce=b.current.currentX+st.width/2,V=b.current.currentY+st.height/2;p.current.forEach((he,fe)=>{if(!he)return;const le=parseFloat(he.style.left)||Ce,oe=parseFloat(he.style.top)||V,we=fe===0?.3:.15-fe*.03,be=le+(Ce-le)*we,D=oe+(V-oe)*we;he.style.left=`${be}px`,he.style.top=`${D}px`}),N.u_time.value=I.getElapsedTime(),N.u_frequency.value=z(),k.rotation.y+=ne*Pu,P.render(),requestAnimationFrame(F)};F();const j="aprix-welcome-shown",J=()=>{localStorage.getItem(j)||(ws.speakForced("Olá! Sou o Aprix, assistente virtual do Lucas. Como posso ajudar?"),localStorage.setItem(j,"true"))},Z=()=>{ws.speakForced("A-Í!!")},W=()=>{J(),s()};E.__openModal=W;const G=ne=>{if(ne.preventDefault(),!f.current){if(i||b.current.isLocked){W();return}d.current=!0,h.current={x:ne.clientX,y:ne.clientY,time:Date.now()},x.current={x:ne.clientX,y:ne.clientY},e.current&&(e.current.kill(),e.current=null),n.current&&(n.current.kill(),n.current=null),S.current.isInZone=!1,S.current.shouldComeToMouse=!1,g.current=!1}},ee=ne=>{if(f.current||!d.current)return;const Te=ne.clientX-h.current.x,Se=ne.clientY-h.current.y;b.current.currentX+=Te,b.current.currentY+=Se;const{clampedX:xe,clampedY:Ce}=_h(b.current.currentX,b.current.currentY);b.current.currentX=xe,b.current.currentY=Ce,E&&(E.style.left=`${xe}px`,E.style.top=`${Ce}px`),h.current.x=ne.clientX,h.current.y=ne.clientY},_e=ne=>{if(!d.current)return;const Te=Date.now()-h.current.time,Se=ne.clientX-x.current.x,xe=ne.clientY-x.current.y,Ce=Math.sqrt(Se*Se+xe*xe);if(Te<250&&Ce<10){W(),d.current=!1,S.current.isInZone=!0,S.current.zonaCenterX=ne.clientX,S.current.zonaCenterY=ne.clientY;return}if(Ce>=10){const V={x:Se/(Te/1e3)*.5,y:xe/(Te/1e3)*.5};m.current=V,g.current=!0,Z()}d.current=!1};return E.addEventListener("mousedown",G),document.addEventListener("mousemove",ee),document.addEventListener("mouseup",_e),()=>{E.removeEventListener("mousedown",G),document.removeEventListener("mousemove",ee),document.removeEventListener("mouseup",_e),E&&O.domElement&&E.removeChild(O.domElement),O.dispose()}},[s,i,u]),w.jsxs(w.Fragment,{children:[w.jsx("svg",{style:{position:"absolute",width:0,height:0},children:w.jsxs("filter",{id:ms.filterId,children:[w.jsx("feGaussianBlur",{in:"SourceGraphic",result:"blur",stdDeviation:ms.filterStdDeviation}),w.jsx("feColorMatrix",{in:"blur",values:ms.filterColorMatrixValues})]})}),!i&&w.jsx("div",{style:{position:"fixed",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:998},children:Array.from({length:ms.trailCount}).map((E,O)=>w.jsx("div",{ref:U=>{p.current[O]=U},style:{position:"absolute",width:ms.sizes[O],height:ms.sizes[O],borderRadius:"50%",backgroundColor:ms.fillColor,opacity:ms.opacities[O],transform:"translate(-50%, -50%)",willChange:"transform"}},O))}),w.jsx("div",{ref:t,style:{position:"fixed",width:`${st.width}px`,height:`${st.height}px`,borderRadius:"50%",overflow:"hidden",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",cursor:i||b.current.isLocked?"default":"grab"}})]})};function bb(){return{async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null}}var fl=bb();function oL(t){fl=t}var pf={exec:()=>null};function dt(t,e=""){let n=typeof t=="string"?t:t.source,i={replace:(r,s)=>{let a=typeof s=="string"?s:s.source;return a=a.replace(Zn.caret,"$1"),n=n.replace(r,a),i},getRegex:()=>new RegExp(n,e)};return i}var gq=(()=>{try{return!!new RegExp("(?<=1)(?<!1)")}catch{return!1}})(),Zn={codeRemoveIndent:/^(?: {1,4}| {0,3}\t)/gm,outputLinkReplace:/\\([\[\]])/g,indentCodeCompensation:/^(\s+)(?:```)/,beginningSpace:/^\s+/,endingHash:/#$/,startingSpaceChar:/^ /,endingSpaceChar:/ $/,nonSpaceChar:/[^ ]/,newLineCharGlobal:/\n/g,tabCharGlobal:/\t/g,multipleSpaceGlobal:/\s+/g,blankLine:/^[ \t]*$/,doubleBlankLine:/\n[ \t]*\n[ \t]*$/,blockquoteStart:/^ {0,3}>/,blockquoteSetextReplace:/\n {0,3}((?:=+|-+) *)(?=\n|$)/g,blockquoteSetextReplace2:/^ {0,3}>[ \t]?/gm,listReplaceTabs:/^\t+/,listReplaceNesting:/^ {1,4}(?=( {4})*[^ ])/g,listIsTask:/^\[[ xX]\] +\S/,listReplaceTask:/^\[[ xX]\] +/,listTaskCheckbox:/\[[ xX]\]/,anyLine:/\n.*\n/,hrefBrackets:/^<(.*)>$/,tableDelimiter:/[:|]/,tableAlignChars:/^\||\| *$/g,tableRowBlankLine:/\n[ \t]*$/,tableAlignRight:/^ *-+: *$/,tableAlignCenter:/^ *:-+: *$/,tableAlignLeft:/^ *:-+ *$/,startATag:/^<a /i,endATag:/^<\/a>/i,startPreScriptTag:/^<(pre|code|kbd|script)(\s|>)/i,endPreScriptTag:/^<\/(pre|code|kbd|script)(\s|>)/i,startAngleBracket:/^</,endAngleBracket:/>$/,pedanticHrefTitle:/^([^'"]*[^\s])\s+(['"])(.*)\2/,unicodeAlphaNumeric:/[\p{L}\p{N}]/u,escapeTest:/[&<>"']/,escapeReplace:/[&<>"']/g,escapeTestNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,escapeReplaceNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g,unescapeTest:/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/ig,caret:/(^|[^\[])\^/g,percentDecode:/%25/g,findPipe:/\|/g,splitPipe:/ \|/,slashPipe:/\\\|/g,carriageReturn:/\r\n|\r/g,spaceLine:/^ +$/gm,notSpaceStart:/^\S*/,endingNewline:/\n$/,listItemRegex:t=>new RegExp(`^( {0,3}${t})((?:[	 ][^\\n]*)?(?:\\n|$))`),nextBulletRegex:t=>new RegExp(`^ {0,${Math.min(3,t-1)}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`),hrRegex:t=>new RegExp(`^ {0,${Math.min(3,t-1)}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`),fencesBeginRegex:t=>new RegExp(`^ {0,${Math.min(3,t-1)}}(?:\`\`\`|~~~)`),headingBeginRegex:t=>new RegExp(`^ {0,${Math.min(3,t-1)}}#`),htmlBeginRegex:t=>new RegExp(`^ {0,${Math.min(3,t-1)}}<(?:[a-z].*>|!--)`,"i")},vq=/^(?:[ \t]*(?:\n|$))+/,yq=/^((?: {4}| {0,3}\t)[^\n]+(?:\n(?:[ \t]*(?:\n|$))*)?)+/,xq=/^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/,bd=/^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/,_q=/^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/,Sb=/(?:[*+-]|\d{1,9}[.)])/,lL=/^(?!bull |blockCode|fences|blockquote|heading|html|table)((?:.|\n(?!\s*?\n|bull |blockCode|fences|blockquote|heading|html|table))+?)\n {0,3}(=+|-+) *(?:\n+|$)/,cL=dt(lL).replace(/bull/g,Sb).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/\|table/g,"").getRegex(),bq=dt(lL).replace(/bull/g,Sb).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/table/g,/ {0,3}\|?(?:[:\- ]*\|)+[\:\- ]*\n/).getRegex(),Tb=/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table| +\n)[^\n]+)*)/,Sq=/^[^\n]+/,Eb=/(?!\s*\])(?:\\[\s\S]|[^\[\]\\])+/,Tq=dt(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label",Eb).replace("title",/(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex(),Eq=dt(/^( {0,3}bull)([ \t][^\n]+?)?(?:\n|$)/).replace(/bull/g,Sb).getRegex(),Wm="address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul",Mb=/<!--(?:-?>|[\s\S]*?(?:-->|$))/,Mq=dt("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>\\n*|$)|<![A-Z][\\s\\S]*?(?:>\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|<(?!script|pre|style|textarea)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|</(?!script|pre|style|textarea)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$))","i").replace("comment",Mb).replace("tag",Wm).replace("attribute",/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex(),uL=dt(Tb).replace("hr",bd).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("|table","").replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",Wm).getRegex(),wq=dt(/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/).replace("paragraph",uL).getRegex(),wb={blockquote:wq,code:yq,def:Tq,fences:xq,heading:_q,hr:bd,html:Mq,lheading:cL,list:Eq,newline:vq,paragraph:uL,table:pf,text:Sq},KM=dt("^ *([^\\n ].*)\\n {0,3}((?:\\| *)?:?-+:? *(?:\\| *:?-+:? *)*(?:\\| *)?)(?:\\n((?:(?! *\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)").replace("hr",bd).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("blockquote"," {0,3}>").replace("code","(?: {4}| {0,3}	)[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",Wm).getRegex(),Aq={...wb,lheading:bq,table:KM,paragraph:dt(Tb).replace("hr",bd).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("table",KM).replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",Wm).getRegex()},Cq={...wb,html:dt(`^ *(?:comment *(?:\\n|\\s*$)|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)|<tag(?:"[^"]*"|'[^']*'|\\s[^'"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))`).replace("comment",Mb).replace(/tag/g,"(?!(?:a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)\\b)\\w+(?!:|[^\\w\\s@]*@)\\b").getRegex(),def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,heading:/^(#{1,6})(.*)(?:\n+|$)/,fences:pf,lheading:/^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,paragraph:dt(Tb).replace("hr",bd).replace("heading",` *#{1,6} *[^
 ]`).replace("lheading",cL).replace("|table","").replace("blockquote"," {0,3}>").replace("|fences","").replace("|list","").replace("|html","").replace("|tag","").getRegex()},Rq=/^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,Dq=/^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,fL=/^( {2,}|\\)\n(?!\s*$)/,Pq=/^(`+|[^`])(?:(?= {2,}\n)|[\s\S]*?(?:(?=[\\<!\[`*_]|\b_|$)|[^ ](?= {2,}\n)))/,Xm=/[\p{P}\p{S}]/u,Ab=/[\s\p{P}\p{S}]/u,dL=/[^\s\p{P}\p{S}]/u,Lq=dt(/^((?![*_])punctSpace)/,"u").replace(/punctSpace/g,Ab).getRegex(),hL=/(?!~)[\p{P}\p{S}]/u,Nq=/(?!~)[\s\p{P}\p{S}]/u,Oq=/(?:[^\s\p{P}\p{S}]|~)/u,Uq=dt(/link|precode-code|html/,"g").replace("link",/\[(?:[^\[\]`]|(?<a>`+)[^`]+\k<a>(?!`))*?\]\((?:\\[\s\S]|[^\\\(\)]|\((?:\\[\s\S]|[^\\\(\)])*\))*\)/).replace("precode-",gq?"(?<!`)()":"(^^|[^`])").replace("code",/(?<b>`+)[^`]+\k<b>(?!`)/).replace("html",/<(?! )[^<>]*?>/).getRegex(),pL=/^(?:\*+(?:((?!\*)punct)|[^\s*]))|^_+(?:((?!_)punct)|([^\s_]))/,zq=dt(pL,"u").replace(/punct/g,Xm).getRegex(),Iq=dt(pL,"u").replace(/punct/g,hL).getRegex(),mL="^[^_*]*?__[^_*]*?\\*[^_*]*?(?=__)|[^*]+(?=[^*])|(?!\\*)punct(\\*+)(?=[\\s]|$)|notPunctSpace(\\*+)(?!\\*)(?=punctSpace|$)|(?!\\*)punctSpace(\\*+)(?=notPunctSpace)|[\\s](\\*+)(?!\\*)(?=punct)|(?!\\*)punct(\\*+)(?!\\*)(?=punct)|notPunctSpace(\\*+)(?=notPunctSpace)",kq=dt(mL,"gu").replace(/notPunctSpace/g,dL).replace(/punctSpace/g,Ab).replace(/punct/g,Xm).getRegex(),Fq=dt(mL,"gu").replace(/notPunctSpace/g,Oq).replace(/punctSpace/g,Nq).replace(/punct/g,hL).getRegex(),Bq=dt("^[^_*]*?\\*\\*[^_*]*?_[^_*]*?(?=\\*\\*)|[^_]+(?=[^_])|(?!_)punct(_+)(?=[\\s]|$)|notPunctSpace(_+)(?!_)(?=punctSpace|$)|(?!_)punctSpace(_+)(?=notPunctSpace)|[\\s](_+)(?!_)(?=punct)|(?!_)punct(_+)(?!_)(?=punct)","gu").replace(/notPunctSpace/g,dL).replace(/punctSpace/g,Ab).replace(/punct/g,Xm).getRegex(),Vq=dt(/\\(punct)/,"gu").replace(/punct/g,Xm).getRegex(),Hq=dt(/^<(scheme:[^\s\x00-\x1f<>]*|email)>/).replace("scheme",/[a-zA-Z][a-zA-Z0-9+.-]{1,31}/).replace("email",/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/).getRegex(),Gq=dt(Mb).replace("(?:-->|$)","-->").getRegex(),jq=dt("^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>").replace("comment",Gq).replace("attribute",/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/).getRegex(),Zp=/(?:\[(?:\\[\s\S]|[^\[\]\\])*\]|\\[\s\S]|`+[^`]*?`+(?!`)|[^\[\]\\`])*?/,Wq=dt(/^!?\[(label)\]\(\s*(href)(?:(?:[ \t]*(?:\n[ \t]*)?)(title))?\s*\)/).replace("label",Zp).replace("href",/<(?:\\.|[^\n<>\\])+>|[^ \t\n\x00-\x1f]*/).replace("title",/"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/).getRegex(),gL=dt(/^!?\[(label)\]\[(ref)\]/).replace("label",Zp).replace("ref",Eb).getRegex(),vL=dt(/^!?\[(ref)\](?:\[\])?/).replace("ref",Eb).getRegex(),Xq=dt("reflink|nolink(?!\\()","g").replace("reflink",gL).replace("nolink",vL).getRegex(),ZM=/[hH][tT][tT][pP][sS]?|[fF][tT][pP]/,Cb={_backpedal:pf,anyPunctuation:Vq,autolink:Hq,blockSkip:Uq,br:fL,code:Dq,del:pf,emStrongLDelim:zq,emStrongRDelimAst:kq,emStrongRDelimUnd:Bq,escape:Rq,link:Wq,nolink:vL,punctuation:Lq,reflink:gL,reflinkSearch:Xq,tag:jq,text:Pq,url:pf},qq={...Cb,link:dt(/^!?\[(label)\]\((.*?)\)/).replace("label",Zp).getRegex(),reflink:dt(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label",Zp).getRegex()},Xy={...Cb,emStrongRDelimAst:Fq,emStrongLDelim:Iq,url:dt(/^((?:protocol):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/).replace("protocol",ZM).replace("email",/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/).getRegex(),_backpedal:/(?:[^?!.,:;*_'"~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_'"~)]+(?!$))+/,del:/^(~~?)(?=[^\s~])((?:\\[\s\S]|[^\\])*?(?:\\[\s\S]|[^\s~\\]))\1(?=[^~]|$)/,text:dt(/^([`~]+|[^`~])(?:(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|protocol:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/).replace("protocol",ZM).getRegex()},Yq={...Xy,br:dt(fL).replace("{2,}","*").getRegex(),text:dt(Xy.text).replace("\\b_","\\b_| {2,}\\n").replace(/\{2,\}/g,"*").getRegex()},bh={normal:wb,gfm:Aq,pedantic:Cq},Lu={normal:Cb,gfm:Xy,breaks:Yq,pedantic:qq},$q={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"},QM=t=>$q[t];function xs(t,e){if(e){if(Zn.escapeTest.test(t))return t.replace(Zn.escapeReplace,QM)}else if(Zn.escapeTestNoEncode.test(t))return t.replace(Zn.escapeReplaceNoEncode,QM);return t}function JM(t){try{t=encodeURI(t).replace(Zn.percentDecode,"%")}catch{return null}return t}function ew(t,e){var s;let n=t.replace(Zn.findPipe,(a,o,l)=>{let c=!1,u=o;for(;--u>=0&&l[u]==="\\";)c=!c;return c?"|":" |"}),i=n.split(Zn.splitPipe),r=0;if(i[0].trim()||i.shift(),i.length>0&&!((s=i.at(-1))!=null&&s.trim())&&i.pop(),e)if(i.length>e)i.splice(e);else for(;i.length<e;)i.push("");for(;r<i.length;r++)i[r]=i[r].trim().replace(Zn.slashPipe,"|");return i}function Nu(t,e,n){let i=t.length;if(i===0)return"";let r=0;for(;r<i&&t.charAt(i-r-1)===e;)r++;return t.slice(0,i-r)}function Kq(t,e){if(t.indexOf(e[1])===-1)return-1;let n=0;for(let i=0;i<t.length;i++)if(t[i]==="\\")i++;else if(t[i]===e[0])n++;else if(t[i]===e[1]&&(n--,n<0))return i;return n>0?-2:-1}function tw(t,e,n,i,r){let s=e.href,a=e.title||null,o=t[1].replace(r.other.outputLinkReplace,"$1");i.state.inLink=!0;let l={type:t[0].charAt(0)==="!"?"image":"link",raw:n,href:s,title:a,text:o,tokens:i.inlineTokens(o)};return i.state.inLink=!1,l}function Zq(t,e,n){let i=t.match(n.other.indentCodeCompensation);if(i===null)return e;let r=i[1];return e.split(`
 `).map(s=>{let a=s.match(n.other.beginningSpace);if(a===null)return s;let[o]=a;return o.length>=r.length?s.slice(r.length):s}).join(`
