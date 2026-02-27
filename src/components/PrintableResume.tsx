@@ -335,9 +335,9 @@ const PrintableResume = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 <a
                   className="flex items-center justify-between"
                   target="_blank"
-                  href="https://lucasrubo.github.io/lucasrubo/"
+                  href="https://lucasrubo.github.io/portfolio/"
                 >
-                  lucasrubo.github.io/lucasrubo/{" "}
+                  lucasrubo.github.io/portfolio/{" "}
                   <ExternalLink className="inline w-3 h-3 text-blue-600" />
                 </a>
               </p>

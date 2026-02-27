@@ -76,7 +76,7 @@ const About = () => {
               <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 p-1">
                 <div className="relative overflow-hidden rounded-xl bg-card">
                   <img
-                    src="/lucasrubo/images/eu.jpg"
+                    src="/portfolio/images/eu.jpg"
                     alt="Lucas Gabriel Rubo - Desenvolvedor Full Stack"
                     className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105 aspect-square"
                   />

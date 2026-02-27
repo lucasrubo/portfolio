@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://lucasrubo.github.io/lucasrubo/sitemap.xml
+Sitemap: https://lucasrubo.github.io/portfolio/sitemap.xml
