@@ -1,0 +1,324 @@
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import type {
+  AprixContextType,
+  AprixState,
+  AprixMode,
+  ChatMessage,
+  AprixProviderProps,
+} from "../types";
+import { ttsService } from "../services";
+import { useLanguage } from "../../contexts/LanguageContext";
+
+const STORAGE_KEY = "aprix-mode";
+const MESSAGES_STORAGE_KEY = "aprix-messages";
+
+/**
+ * Carrega mensagens salvas do localStorage
+ */
+const loadSavedMessages = (): ChatMessage[] => {
+  try {
+    const saved = localStorage.getItem(MESSAGES_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Converter timestamps string de volta para Date
+      return parsed.map((msg: ChatMessage & { timestamp: string }) => ({
+        ...msg,
+        timestamp: new Date(msg.timestamp),
+      }));
+    }
+  } catch (error) {
+    console.error("Error loading saved messages:", error);
+  }
+  return [];
+};
+
+/**
+ * Salva mensagens no localStorage
+ */
+const saveMessages = (messages: ChatMessage[]): void => {
+  try {
+    // Limitar a 50 mensagens para não sobrecarregar o storage
+    const messagesToSave = messages.slice(-50);
+    localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(messagesToSave));
+  } catch (error) {
+    console.error("Error saving messages:", error);
+  }
+};
+
+const initialState: AprixState = {
+  isModalOpen: false,
+  mode: "follow",
+  messages: [],
+  isLoading: false,
+  ttsEnabled: ttsService.isActive(),
+  apiOnline: true,
+};
+
+const AprixContext = createContext<AprixContextType | undefined>(undefined);
+
+/**
+ * Generates a unique ID for messages
+ */
+const generateId = (): string => {
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+};
+
+/**
+ * AprixProvider - Global state provider for Aprix Assistant
+ */
+export const AprixProvider: React.FC<AprixProviderProps> = ({
+  children,
+  initialMode,
+}) => {
+  const [state, setState] = useState<AprixState>(() => {
+    // Recuperar modo salvo do localStorage
+    const savedMode = localStorage.getItem(STORAGE_KEY) as AprixMode | null;
+    // Recuperar mensagens salvas
+    const savedMessages = loadSavedMessages();
+    return {
+      ...initialState,
+      mode: savedMode || initialMode || "follow",
+      messages: savedMessages,
+    };
+  });
+
+  // Modo pendente que será aplicado ao fechar o modal
+  const [pendingMode, setPendingMode] = useState<AprixMode | null>(null);
+
+  const { language } = useLanguage();
+
+  // Persistir modo no localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, state.mode);
+  }, [state.mode]);
+
+  // Persistir mensagens no localStorage
+  useEffect(() => {
+    if (state.messages.length > 0) {
+      saveMessages(state.messages);
+    }
+  }, [state.messages, language]);
+
+  const openModal = useCallback(() => {
+    // Ao abrir, resetar o pending mode
+    setPendingMode(null);
+    setState((prev) => ({ ...prev, isModalOpen: true }));
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setState((prev) => {
+      // Aplicar o modo pendente ao fechar, se houver
+      const newMode = pendingMode !== null ? pendingMode : prev.mode;
+      return { ...prev, isModalOpen: false, mode: newMode };
+    });
+    setPendingMode(null);
+  }, [pendingMode]);
+
+  const toggleMode = useCallback(() => {
+    if (state.isModalOpen) {
+      // Se o modal está aberto, apenas atualiza o pending mode
+      const currentMode = pendingMode !== null ? pendingMode : state.mode;
+      setPendingMode(currentMode === "follow" ? "fixed" : "follow");
+    } else {
+      // Se modal fechado, muda diretamente
+      setState((prev) => ({
+        ...prev,
+        mode: prev.mode === "follow" ? "fixed" : "follow",
+      }));
+    }
+  }, [state.isModalOpen, state.mode, pendingMode]);
+
+  const setMode = useCallback(
+    (mode: AprixMode) => {
+      if (state.isModalOpen) {
+        setPendingMode(mode);
+      } else {
+        setState((prev) => ({ ...prev, mode }));
+      }
+    },
+    [state.isModalOpen]
+  );
+
+  // Getter para o modo visual (usado no toggle do modal)
+  const getDisplayMode = useCallback((): AprixMode => {
+    if (state.isModalOpen && pendingMode !== null) {
+      return pendingMode;
+    }
+    return state.mode;
+  }, [state.isModalOpen, state.mode, pendingMode]);
+
+  const checkApiHealth = useCallback(async () => {
+    try {
+      const healthUrl = import.meta.env.PROD
+        ? "https://aprix-five.vercel.app/health"
+        : "/health";
+      const response = await fetch(healthUrl, {
+        method: "GET",
+      });
+      setState((prev) => ({ ...prev, apiOnline: response.ok }));
+    } catch (error) {
+      console.error("API health check failed:", error);
+      setState((prev) => ({ ...prev, apiOnline: false }));
+    }
+  }, []);
+
+  // Check API health on mount
+  useEffect(() => {
+    checkApiHealth();
+  }, [checkApiHealth]);
+
+  const sendMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim()) return;
+
+      // Parar TTS se estiver falando
+      ttsService.stop();
+
+      const userMessage: ChatMessage = {
+        id: generateId(),
+        role: "user",
+        content: content.trim(),
+        timestamp: new Date(),
+      };
+
+      setState((prev) => ({
+        ...prev,
+        messages: [...prev.messages, userMessage],
+        isLoading: true,
+      }));
+
+      try {
+        // Determinar URL da API baseada no ambiente
+        const apiUrl = import.meta.env.PROD
+          ? "https://aprix-five.vercel.app/api/chat"
+          : "/api/chat";
+
+        const authKey =
+          "f759e2dd9776f3840e29ad933dd2cc5711a219aef18ab8263f3f6bb411a3e7e9";
+
+        // Preparar histórico de mensagens
+        const history = state.messages.map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+        }));
+
+        // Fazer chamada para a API
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authKey}`,
+          },
+          body: JSON.stringify({
+            message: content.trim(),
+            history: history,
+            lang: language === "pt" ? "pt-BR" : "en-US",
+          }),
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error("Chave de autenticação inválida ou ausente");
+          } else if (response.status === 400) {
+            throw new Error("Campo obrigatório ausente (ex.: message)");
+          } else if (response.status === 500) {
+            throw new Error("Erro interno no servidor");
+          } else {
+            throw new Error(`Erro na API: ${response.status}`);
+          }
+        }
+
+        const data = await response.json();
+        const assistantResponse =
+          data.response || "Resposta não recebida da API";
+
+        const assistantMessage: ChatMessage = {
+          id: generateId(),
+          role: "assistant",
+          content: assistantResponse,
+          timestamp: new Date(),
+        };
+
+        setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages, assistantMessage],
+          isLoading: false,
+        }));
+
+        // Falar a resposta se TTS estiver ativo
+        ttsService.speak(assistantResponse, language);
+      } catch (error) {
+        console.error("Error sending message:", error);
+
+        const errorMessage: ChatMessage = {
+          id: generateId(),
+          role: "assistant",
+          content:
+            error instanceof Error
+              ? error.message
+              : "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
+          timestamp: new Date(),
+        };
+
+        setState((prev) => ({
+          ...prev,
+          messages: [...prev.messages, errorMessage],
+          isLoading: false,
+        }));
+      }
+    },
+    [state.messages, language]
+  );
+
+  const clearMessages = useCallback(() => {
+    ttsService.stop();
+    localStorage.removeItem(MESSAGES_STORAGE_KEY);
+    setState((prev) => ({ ...prev, messages: [] }));
+  }, []);
+
+  const toggleTTS = useCallback(() => {
+    const newState = ttsService.toggle();
+    setState((prev) => ({ ...prev, ttsEnabled: newState }));
+  }, []);
+
+  const stopTTS = useCallback(() => {
+    ttsService.stop();
+  }, []);
+
+  const value: AprixContextType = {
+    ...state,
+    openModal,
+    closeModal,
+    toggleMode,
+    setMode,
+    sendMessage,
+    clearMessages,
+    getDisplayMode,
+    toggleTTS,
+    stopTTS,
+    checkApiHealth,
+  };
+
+  return (
+    <AprixContext.Provider value={value}>{children}</AprixContext.Provider>
+  );
+};
+
+/**
+ * Hook to access Aprix context
+ */
+export const useAprix = (): AprixContextType => {
+  const context = useContext(AprixContext);
+  if (!context) {
+    throw new Error("useAprix must be used within an AprixProvider");
+  }
+  return context;
+};
+
+export default AprixContext;

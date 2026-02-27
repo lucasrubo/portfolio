@@ -18,7 +18,7 @@ const NavBar = () => {
   }, []);
 
   const navItems = [
-    { key: "nav.home", href: "#home" },
+    { key: "nav.home", href: "#hero" },
     { key: "nav.about", href: "#about" },
     { key: "nav.experience", href: "#experience" },
     { key: "nav.education", href: "#education" },
@@ -36,17 +36,17 @@ const NavBar = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${
         scrolled
           ? "bg-background/95 backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-8xl">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <motion.a
-            href="#home"
+            href="#hero"
             className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

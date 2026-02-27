@@ -1,6 +1,6 @@
 import React from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-
+import { ExternalLink } from "lucide-react";
 const PrintableResume = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const { t, language } = useLanguage();
 
@@ -91,6 +91,7 @@ const PrintableResume = React.forwardRef<HTMLDivElement>((_props, ref) => {
     { name: "CI/CD", value: 65 },
     { name: "HTML/CSS", value: 100 },
     { name: "Python", value: 60 },
+    { name: "WPF", value: 50 },
     { name: "Delphi", value: 55 },
   ];
 
@@ -311,10 +312,34 @@ const PrintableResume = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </h3>
             <div className="space-y-1 text-sm">
               <p>
-                <strong>LinkedIn:</strong> {t("profile.linkedin")}
+                <a
+                  className="flex items-center justify-between"
+                  target="_blank"
+                  href={"https://" + t("profile.linkedin")}
+                >
+                  {t("profile.linkedin")}{" "}
+                  <ExternalLink className="inline w-3 h-3 text-blue-600" />
+                </a>
               </p>
               <p>
-                <strong>GitHub:</strong> {t("profile.github")}
+                <a
+                  className="flex items-center justify-between"
+                  target="_blank"
+                  href={"https://" + t("profile.github")}
+                >
+                  {t("profile.github")}{" "}
+                  <ExternalLink className="inline w-3 h-3 text-blue-600" />
+                </a>
+              </p>
+              <p>
+                <a
+                  className="flex items-center justify-between"
+                  target="_blank"
+                  href="https://lucasrubo.github.io/lucasrubo/"
+                >
+                  lucasrubo.github.io/lucasrubo/{" "}
+                  <ExternalLink className="inline w-3 h-3 text-blue-600" />
+                </a>
               </p>
             </div>
           </div>

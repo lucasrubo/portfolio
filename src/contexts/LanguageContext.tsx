@@ -120,7 +120,7 @@ const translations = {
     "profile.email": "lucasrubo1@gmail.com",
     "profile.phone": "+55 19 994019804",
     "profile.location": "Valinhos, SP - Brasil",
-    "profile.linkedin": "linkedin.com/in/lucasrubo",
+    "profile.linkedin": "linkedin.com/in/lucas-rubo/",
     "profile.github": "github.com/lucasrubo",
 
     // Resume Sections
@@ -134,7 +134,7 @@ const translations = {
 
     // Profile About Paragraphs
     "profile.about.paragraph1":
-      "Tenho 24 anos e sou formado em Ciência da Computação pela Universidade Paulista.",
+      "Tenho 25 anos e sou formado em Ciência da Computação pela Universidade Paulista.",
     "profile.about.paragraph2":
       "Atualmente, trabalho como desenvolvedor na Areco, onde me especializo em desenvolvimento front-end para o sistema ERP Web usando Blazor. Além disso, contribuo para a construção de sistemas complementares com Blazor, Next.js e Delphi, garantindo integração perfeita e desempenho. Minha paixão está no desenvolvimento front-end, onde gosto de criar interfaces de usuário intuitivas e responsivas que melhoram a usabilidade e eficiência. Além do Blazor, também tenho experiência com React e TypeScript, que utilizo ativamente em projetos pessoais e profissionais para me manter na vanguarda do desenvolvimento web moderno.",
     "profile.about.paragraph3":
@@ -143,6 +143,13 @@ const translations = {
       "Sou profundamente apaixonado por tecnologias front-end, particularmente React e TypeScript, e busco continuamente expandir minha expertise em frameworks modernos e melhores práticas. Além disso, tenho experiência com linguagens back-end como Java, Python e C++, bem como sistemas de banco de dados como MySQL e PostgreSQL.",
     "profile.about.paragraph5":
       "Um forte defensor do aprendizado ao longo da vida, prospero em ambientes dinâmicos onde posso aplicar minhas habilidades de resolução de problemas e adaptabilidade para entregar soluções de alta qualidade. Seja trabalhando em sistemas complexos ou experimentando novas tecnologias, estou sempre ansioso para crescer e contribuir para projetos impactantes.",
+
+    // Aprix
+    "aprix.online": "Online",
+    "aprix.offline": "Offline",
+    "aprix.title": "Aprix",
+    "aprix.fixedMode": "Modo fixo (não seguir mouse)",
+    "aprix.closeModal": "Fechar modal",
   },
   en: {
     // Navigation
@@ -209,7 +216,7 @@ const translations = {
     "profile.email": "lucasrubo1@gmail.com",
     "profile.phone": "+55 19 994019804",
     "profile.location": "Valinhos, SP - Brazil",
-    "profile.linkedin": "linkedin.com/in/lucasrubo",
+    "profile.linkedin": "linkedin.com/in/lucas-rubo/",
     "profile.github": "github.com/lucasrubo",
 
     // Resume Sections
@@ -232,6 +239,13 @@ const translations = {
       "I am deeply passionate about front-end technologies, particularly React and TypeScript, and continuously seek to expand my expertise in modern frameworks and best practices. Additionally, I have experience with back-end languages like Java, Python, and C++, as well as database systems such as MySQL and PostgreSQL.",
     "profile.about.paragraph5":
       "A strong believer in lifelong learning, I thrive in dynamic environments where I can apply my problem-solving skills and adaptability to deliver high-quality solutions. Whether working on complex systems or experimenting with new technologies, I am always eager to grow and contribute to impactful projects.",
+
+    // Aprix
+    "aprix.online": "Online",
+    "aprix.offline": "Offline",
+    "aprix.title": "Aprix",
+    "aprix.fixedMode": "Fixed mode (don't follow mouse)",
+    "aprix.closeModal": "Close modal",
   },
 };
 

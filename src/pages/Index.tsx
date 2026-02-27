@@ -1,4 +1,3 @@
-import { LanguageProvider } from "@/contexts/LanguageContext";
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -10,11 +9,18 @@ import Certificates from "@/components/Certificates";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Blog from "@/components/Blog";
+import ClickSpark from "@/components/ClickSpark";
 
 const Index = () => {
   return (
-    <LanguageProvider>
-      <div className="min-h-screen bg-background">
+    <ClickSpark
+      sparkColor="#00bfff"
+      sparkSize={10}
+      sparkRadius={15}
+      sparkCount={8}
+      duration={400}
+    >
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <NavBar />
         <Hero />
         <About />
@@ -26,7 +32,7 @@ const Index = () => {
         <Contact />
         <Footer />
       </div>
-    </LanguageProvider>
+    </ClickSpark>
   );
 };
 

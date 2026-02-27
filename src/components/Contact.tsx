@@ -33,8 +33,8 @@ const Contact = () => {
     {
       icon: Linkedin,
       label: "LinkedIn",
-      value: "linkedin.com/in/lucasrubo",
-      href: "https://linkedin.com/in/lucasrubo",
+      value: "linkedin.com/in/lucas-rubo/",
+      href: "https://linkedin.com/in/lucas-rubo/",
     },
     {
       icon: MapPin,

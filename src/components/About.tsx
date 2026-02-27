@@ -65,24 +65,50 @@ const About = () => {
           </h2>
           <div className="h-1 w-20 bg-gradient-primary mx-auto mb-12" />
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative group max-w-xs mx-auto md:mx-0 order-2 md:order-1"
+            >
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 p-1">
+                <div className="relative overflow-hidden rounded-xl bg-card">
+                  <img
+                    src="/lucasrubo/images/eu.jpg"
+                    alt="Lucas Gabriel Rubo - Desenvolvedor Full Stack"
+                    className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105 aspect-square"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+              </div>
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-xl group-hover:bg-primary/20 transition-colors duration-300" />
+            </motion.div>
+
+            <div className="space-y-6 md:col-span-2 order-1 md:order-2">
               {paragraphs.map((para, index) => (
-                <p
+                <motion.p
                   key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 + 0.4 }}
                   className="text-lg text-muted-foreground leading-relaxed"
                 >
                   {para}
-                </p>
+                </motion.p>
               ))}
             </div>
+          </div>
 
-            <div className="space-y-6">
+          <div className="mt-12 md:mt-16">
+            <div className="grid md:grid-cols-2 gap-6">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-30px" }}
                   transition={{
                     delay: index * 0.1,

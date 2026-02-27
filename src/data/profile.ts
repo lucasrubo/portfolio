@@ -113,6 +113,7 @@ const profile = {
       { name: "CI/CD (Jenkins)", value: 65 },
       { name: "HTML/CSS", value: 70 },
       { name: "PowerShell", value: 60 },
+      { name: "WPF", value: 55 },
       { name: "Delphi", value: 55 },
     ],
   },

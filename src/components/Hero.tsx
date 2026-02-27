@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { ChevronDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
-import Scene3D from "./Scene3D";
 import PrintableResume from "./PrintableResume";
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 import { Suspense } from "react";
+import ColorBends from "./ColorBends";
 
 const Hero = () => {
   const { t } = useLanguage();
@@ -31,18 +31,30 @@ const Hero = () => {
 
   return (
     <section
-      id="home"
+      id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero"
     >
       {/* 3D Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 opacity-20">
         <Suspense fallback={<div className="w-full h-full bg-gradient-hero" />}>
-          <Scene3D />
+          <ColorBends
+            colors={["#ff5c7a", "#8a5cff", "#00ffd1"]}
+            rotation={125}
+            autoRotate={0.1}
+            speed={0.2}
+            scale={1}
+            frequency={1}
+            warpStrength={1}
+            mouseInfluence={0.5}
+            parallax={0}
+            noise={0.1}
+            transparent
+          />
         </Suspense>
       </div>
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background z-10" />
+      <div className="inset-0 absolute bg-gradient-to-b from-transparent via-background/50 to-background z-10" />
 
       {/* Content */}
       <div className="container mx-auto px-4 z-20 relative">
