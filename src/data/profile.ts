@@ -65,7 +65,7 @@ const profile = {
     ],
     experience: [
       {
-        title: "Junior Development Analyst B",
+        title: "Mid-level Development Analyst",
         company: "Areco",
         period: "2024 — Present",
         description:
